@@ -11,7 +11,7 @@ import org.jboss.security.vault.SecurityVaultFactory;
 import org.picketbox.plugins.vault.PicketBoxSecurityVault;
 
 public class PropertySourceVault implements PropertySource {
-    private String PROPERTY_FILE_RELATIVE_PATH = "./test.properties";
+    private String PROPERTY_FILE_RELATIVE_PATH = "./conf/vault.properties";
 
     private SecurityVault vault;
     private PropertyFileManager pfm;
@@ -26,12 +26,11 @@ public class PropertySourceVault implements PropertySource {
     }
 
     public void init() {
-        System.out.println("MBLOG");
         try {
             vault = SecurityVaultFactory.get();
 
+            // Load vault property file
             properties = pfm.load();
-            properties.list(System.out);
 
             Map<String, Object> options = new HashMap<String, Object>();
             options.put(PicketBoxSecurityVault.KEYSTORE_URL, properties.getProperty("KEYSTORE_URL"));
@@ -51,12 +50,10 @@ public class PropertySourceVault implements PropertySource {
     public String getProperty(String arg0) {
         String result = null;
 
-        System.out.println("MBLOG");
-
         if (vault.isInitialized()) {
             try {
                 System.out.println("key: " + arg0);
-                result = new String(vault.retrieve("tomcat", arg0, null));
+                result = new String(vault.retrieve(properties.getProperty("VAULT_BLOCK"), arg0, null));
                 System.out.println("key: " + arg0 + " : value: " + result);
             } catch (SecurityVaultException e) {
                 e.printStackTrace();
