@@ -1,0 +1,63 @@
+Pink link vault extention for tomcat.
+
+See the NOTICE file distributed with this work for information
+regarding copyright ownership.  See the LICENSE file distributed
+with this work for information regarding licensing.
+=====================================================================
+
+Requirements:
+-------------
+
+Building from the distributed tarball:
+* Apache Tomcat 8.20.0+
+* Apache Maven
+
+Building Instructions:
+----------------------
+
+1. Install Apache Tomcat (from RPM or by hand or however you prefer)
+
+2. Compile Tomcat Vault from its source directory by running
+    mvn install
+
+3. Copy the generated jar target/vault-tomcat-1.0-SNAPSHOT.jar 
+   to CATALINA_BASE/lib
+
+4. Copy all the jars from /lib to CATALINA_BASE/lib
+
+5. Add the following line to CATALINA_BASE/conf/catalina.properties
+    org.apache.tomcat.util.digester.PROPERTY_SOURCE=org.apache.tomcat.util.PropertySourceVault
+
+6. Configure your vault using ./bin/vault.sh
+
+7. Create a file named vault.properties in CATALINA_BASE/conf 
+   containing your vault information like below (all of these keys 
+   must be define and NOT empty)
+    KEYSTORE_URL=..
+    KEYSTORE_PASSWORD=..
+    KEYSTORE_ALIAS=..
+    SALT=..
+    ITERATION_COUNT=..
+    ENC_FILE_DIR=..
+    VAULT_BLOCK=..
+
+8. Start Apache Tomcat
+    
+
+
+Configuration:
+--------------
+
+Simply replace whatever property value you would like to hide 
+in any Apache Tomcat configuration file by ${attribut_name}
+    
+    Exemple
+    =======
+     <user username="tomcat" password="acb$123" roles="manager-gui"/>
+                          from ||      -------
+                               \/ to
+     <user username="tomcat" password="${password}" roles="manager-gui"/>
+                                       -----------   
+
+
+$Id: INSTALL,v 1.0 2015/03/17 16:50:00 maxbeck Exp $
