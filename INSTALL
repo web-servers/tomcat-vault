@@ -28,7 +28,9 @@ Building Instructions:
 5. Add the following line to CATALINA_BASE/conf/catalina.properties
     org.apache.tomcat.util.digester.PROPERTY_SOURCE=org.apache.tomcat.util.PropertySourceVault
 
-6. Configure your vault using ./bin/vault.sh
+6. Configure your vault using ./bin/vault.sh (found the related
+   documentation in the "links" section)
+
 
 7. Create a file named vault.properties in CATALINA_BASE/conf 
    containing your vault information as below (all of these keys 
@@ -42,7 +44,6 @@ Building Instructions:
     VAULT_BLOCK=..
 
 8. Start Apache Tomcat
-    
 
 
 Configuration:
@@ -59,5 +60,10 @@ in any Apache Tomcat configuration file by ${attribut_name}
      <user username="tomcat" password="${password}" roles="manager-gui"/>
                                        -----------   
 
+Links:
+------
 
-$Id: INSTALL,v 1.0 2015/03/17 16:50:00 maxbeck Exp $
+How to configure Vault :
+ - https://access.redhat.com/documentation/en-US/JBoss_Enterprise_Application_Platform/6.1/html/Security_Guide/Configure_the_Enterprise_Application_Platform_to_Use_the_Password_Vault1.html
+
+$Id: INSTALL,v 1.0 2015/03/18 10:23:00 maxbeck Exp $
