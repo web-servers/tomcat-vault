@@ -1,4 +1,4 @@
-Pink link vault extention for tomcat.
+PicketLink vault extension for Apache Tomcat.
 
 See the NOTICE file distributed with this work for information
 regarding copyright ownership.  See the LICENSE file distributed
@@ -20,7 +20,7 @@ Building Instructions:
 2. Compile Tomcat Vault from its source directory by running
     mvn install
 
-3. Copy the generated jar target/vault-tomcat-1.0-SNAPSHOT.jar 
+3. Copy the generated jar target/vault-tomcat-1.0-SNAPSHOT.jar
    to CATALINA_BASE/lib
 
 4. Copy all the jars from /lib to CATALINA_BASE/lib
@@ -31,8 +31,8 @@ Building Instructions:
 6. Configure your vault using ./bin/vault.sh
 
 7. Create a file named vault.properties in CATALINA_BASE/conf 
-   containing your vault information like below (all of these keys 
-   must be define and NOT empty)
+   containing your vault information as below (all of these keys 
+   must be defined and NOT empty)
     KEYSTORE_URL=..
     KEYSTORE_PASSWORD=..
     KEYSTORE_ALIAS=..
@@ -51,7 +51,7 @@ Configuration:
 Simply replace whatever property value you would like to hide 
 in any Apache Tomcat configuration file by ${attribut_name}
     
-    Exemple
+    Example
     =======
      <user username="tomcat" password="acb$123" roles="manager-gui"/>
                           from ||      -------

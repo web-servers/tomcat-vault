@@ -1,2 +1,2 @@
 # tomcat-vault
-pink link vault extention for tomcat.
+PicketLink vault extension for Apache Tomcat.
