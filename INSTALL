@@ -64,6 +64,6 @@ Links:
 ------
 
 How to configure Vault :
- - https://access.redhat.com/documentation/en-US/JBoss_Enterprise_Application_Platform/6.1/html/Security_Guide/Configure_the_Enterprise_Application_Platform_to_Use_the_Password_Vault1.html
+ - https://access.redhat.com/documentation/en-US/JBoss_Enterprise_Application_Platform/6.1/html/Security_Guide/Mask_the_Keystore_Password_and_Initialize_the_Password_Vault..html
 
 $Id: INSTALL,v 1.0 2015/03/18 10:23:00 maxbeck Exp $
