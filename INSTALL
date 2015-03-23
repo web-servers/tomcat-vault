@@ -23,21 +23,14 @@ Building Instructions:
 3. Copy the generated jar target/vault-tomcat-1.0-SNAPSHOT-jar-with-dependencies.jar
    to CATALINA_BASE/lib
 
-4. Add the dependency for bare-vault to CATALINA_BASE/lib
-    4.1 Clone the source repository to your local machine
-         git clone https://github.com/pskopek/picketlink.git
-    4.2 Compile it
-         mvn install
-    4.3 Copy target/vault-bare-1.0-SNAPSHOT.jar to CATALINA_BASE/lib
-
-5. Add the following line to CATALINA_BASE/conf/catalina.properties
+4. Add the following line to CATALINA_BASE/conf/catalina.properties
     org.apache.tomcat.util.digester.PROPERTY_SOURCE=org.apache.tomcat.util.PropertySourceVault
 
-6. Configure your vault using ./bin/vault.sh (found the related
+5. Configure your vault using ./bin/vault.sh (found the related
    documentation in the "links" section)
 
 
-7. Create a file named vault.properties in CATALINA_BASE/conf 
+6. Create a file named vault.properties in CATALINA_BASE/conf 
    containing your vault information as below (all of these keys 
    must be defined and NOT empty)
     KEYSTORE_URL=..
@@ -48,7 +41,7 @@ Building Instructions:
     ENC_FILE_DIR=..
     VAULT_BLOCK=..
 
-8. Start Apache Tomcat
+7. Start Apache Tomcat
 
 
 Usage:
@@ -71,4 +64,4 @@ Links:
 How to configure Vault :
  - https://access.redhat.com/documentation/en-US/JBoss_Enterprise_Application_Platform/6.1/html/Security_Guide/Mask_the_Keystore_Password_and_Initialize_the_Password_Vault..html
 
-$Id: INSTALL,v 1.1 2015/03/18 15:45:00 maxbeck Exp $
+$Id: INSTALL,v 1.1 2015/03/23 11:44:00 maxbeck Exp $
