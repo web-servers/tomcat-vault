@@ -6,18 +6,18 @@
 
     <groupId>org.apache.tomcat</groupId>
     <artifactId>vault-tomcat</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0.Final</version>
     <name>Tomcat Vault extension</name>
     <dependencies>
         <dependency>
             <groupId>org.picketbox</groupId>
             <artifactId>vault-bare</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0.Final</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-util</artifactId>
-            <version>8.0.18</version>
+            <version>8.0.15</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
