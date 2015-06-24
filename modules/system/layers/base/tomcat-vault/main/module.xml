@@ -21,14 +21,15 @@
   ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
   ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
   -->
-<module xmlns="urn:jboss:module:1.1" name="javax.api">
+
+<module xmlns="urn:jboss:module:1.1" name="tomcat-vault">
+    <resources>
+        <resource-root path="tomcat-vault.jar"/>
+    </resources>
+
+    <main-class name="org.jboss.as.security.vault.VaultTool"/>
+
     <dependencies>
-        <system export="true">
-            <paths>
-                <path name="javax/crypto"/>
-                <path name="javax/crypto/interfaces"/>
-                <path name="javax/crypto/spec"/>
-            </paths>
-        </system>
+	<module name="javax.api"/>
     </dependencies>
 </module>
