@@ -56,8 +56,74 @@
 	<dependency>
 	  <groupId>org.jboss.as</groupId>
 	  <artifactId>jboss-as-security</artifactId>          
-	  <version>7.4.0.Final-redhat-19</version>
-        </dependency>
+	  <version>7.2.0.Final</version>
+       <exclusions>
+            <exclusion>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.jboss.msc</groupId>
+                <artifactId>jboss-msc</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.jboss.as</groupId>
+                <artifactId>jboss-as-domain-management</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.jboss.as</groupId>
+                <artifactId>jboss-as-server</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.jboss.as</groupId>
+                <artifactId>jboss-as-naming</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.jboss.as</groupId>
+                <artifactId>jboss-as-clustering-infinispan</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.jboss.as</groupId>
+                <artifactId>jboss-as-transactions</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.jboss.logging</groupId>
+                <artifactId>jboss-logging</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.jboss.logging</groupId>
+                <artifactId>jboss-logging-processor</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.jboss.security</groupId>
+                <artifactId>jboss-negotiation-extras</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.jboss.security</groupId>
+                <artifactId>jboss-negotiation-spnego</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.picketbox</groupId>
+                <artifactId>picketbox</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.jboss.spec.javax.security.jacc</groupId>
+                <artifactId>jboss-jacc-api_1.4_spec</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.picketbox</groupId>
+                <artifactId>picketbox-infinispan</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.picketbox</groupId>
+                <artifactId>picketbox-commons</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.jboss.as</groupId>
+                <artifactId>jboss-as-subsystem-test</artifactId>
+            </exclusion>
+       </exclusions>
+    </dependency>
 	<dependency>
 	  <groupId>org.hibernate.javax.persistence</groupId>
 	  <artifactId>hibernate-jpa-2.0-api</artifactId>
@@ -82,6 +148,9 @@
                             <descriptorRefs>
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
                             </descriptorRefs>
+                            <outputDirectory>${project.basedir}/modules/system/layers/base/tomcat-vault/main</outputDirectory>
+                            <finalName>tomcat-vault</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
                         </configuration>
                     </execution>
                 </executions>
@@ -115,4 +184,21 @@
             </plugin>
         </plugins>
     </build>
+    <repositories>
+    	<repository>
+          <id>jboss-public-jboss-repo-group</id>
+          <name>JBoss Public Repository Group</name>
+       	  <url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+         <snapshots>
+           <enabled>false</enabled>
+         </snapshots>
+       </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jboss-public-jboss-repo-group</id>
+            <name>JBoss Public Repository Group</name>
+            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
