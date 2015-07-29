@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.tomcat.util.IntrospectionUtils.PropertySource;
-import org.jboss.security.vault.SecurityVault;
-import org.jboss.security.vault.SecurityVaultException;
-import org.jboss.security.vault.SecurityVaultFactory;
+import org.apache.tomcat.vault.security.vault.SecurityVault;
+import org.apache.tomcat.vault.security.vault.SecurityVaultException;
+import org.apache.tomcat.vault.security.vault.SecurityVaultFactory;
 import org.apache.tomcat.vault.security.vault.PicketBoxSecurityVault;
 
 public class PropertySourceVault implements PropertySource {

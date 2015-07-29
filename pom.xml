@@ -10,11 +10,6 @@
     <name>Tomcat Vault extension</name>
     <dependencies>
         <dependency>
-            <groupId>org.picketbox</groupId>
-            <artifactId>vault-bare</artifactId>
-            <version>1.0.0.Final</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-util</artifactId>
             <version>8.0.15</version>
@@ -36,6 +31,11 @@
             <artifactId>commons-cli</artifactId>
 	    <version>1.2</version>
         </dependency>
+	<dependency>
+	    <groupId>org.jboss.modules</groupId>
+            <artifactId>jboss-modules</artifactId>
+            <version>1.3.3.Final</version>
+	</dependency>
     </dependencies>
     <build>
         <plugins>
