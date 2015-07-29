@@ -6,13 +6,13 @@
 
     <groupId>org.apache.tomcat</groupId>
     <artifactId>vault-tomcat</artifactId>
-    <version>1.0.3.Final-SNAPSHOT</version>
+    <version>1.0.3.Final</version>
     <name>Tomcat Vault extension</name>
     <dependencies>
         <dependency>
             <groupId>org.picketbox</groupId>
             <artifactId>vault-bare</artifactId>
-            <version>1.0.1.Final-SNAPSHOT</version>
+            <version>1.0.0.Final</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
