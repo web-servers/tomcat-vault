@@ -27,7 +27,7 @@
         <resource-root path="tomcat-vault.jar"/>
     </resources>
 
-    <main-class name="org.jboss.as.security.vault.VaultTool"/>
+    <main-class name="org.apache.tomcat.vault.VaultTool"/>
 
     <dependencies>
 	<module name="javax.api"/>

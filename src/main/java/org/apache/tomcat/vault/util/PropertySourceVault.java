@@ -1,4 +1,4 @@
-package org.apache.tomcat.util;
+package org.apache.tomcat.vault.util;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +8,7 @@ import org.apache.tomcat.util.IntrospectionUtils.PropertySource;
 import org.jboss.security.vault.SecurityVault;
 import org.jboss.security.vault.SecurityVaultException;
 import org.jboss.security.vault.SecurityVaultFactory;
-import org.picketbox.plugins.vault.PicketBoxSecurityVault;
+import org.apache.tomcat.vault.security.vault.PicketBoxSecurityVault;
 
 public class PropertySourceVault implements PropertySource {
     private String PROPERTY_FILE_RELATIVE_PATH = "./conf/vault.properties";

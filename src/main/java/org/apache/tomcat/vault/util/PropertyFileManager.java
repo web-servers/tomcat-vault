@@ -1,4 +1,4 @@
-package org.apache.tomcat.util;
+package org.apache.tomcat.vault.util;
 
 import java.io.*;
 import java.util.Properties;
