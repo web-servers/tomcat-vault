@@ -102,7 +102,7 @@ echo "========================================================================="
 echo ""
 
 eval \"$JAVA\" $JAVA_OPTS \
-         -jar \"$JBOSS_HOME/jboss-modules.jar\" \
+         -jar \"$JBOSS_HOME/modules/system/layers/base/tomcat-vault/main/tomcat-vault.jar\" \
          -mp \"${JBOSS_MODULEPATH}\" \
          tomcat-vault \
          '"$@"'
