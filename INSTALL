@@ -17,19 +17,14 @@ Building Instructions:
 
 1. Install Apache Tomcat (from RPM or by hand or however you prefer)
 
-2. Clone and build the "bare-vault" dependency
-    $ git clone https://github.com/picketbox/bare-vault.git
-    $ cd bare-vault/
-    $ mvn install
-
 2. Compile Tomcat Vault from its source directory by running
     $ mvn install
 
-3. Copy the generated jar target/vault-tomcat-1.0-SNAPSHOT-jar-with-dependencies.jar
-   to CATALINA_BASE/lib
+3. Copy the generated jar target/vault-tomcat-X-jar-with-dependencies.jar
+   to CATALINA_BASE/lib (where X is the version)
 
 4. Add the following line to CATALINA_BASE/conf/catalina.properties
-    org.apache.tomcat.util.digester.PROPERTY_SOURCE=org.apache.tomcat.util.PropertySourceVault
+    org.apache.tomcat.util.digester.PROPERTY_SOURCE=org.apache.tomcat.vault.util.PropertySourceVault
 
 5. Configure your vault using ./bin/vault.sh (found the related
    documentation in the "links" section)
