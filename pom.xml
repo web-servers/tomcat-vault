@@ -54,9 +54,6 @@
                             <descriptorRefs>
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
                             </descriptorRefs>
-                            <outputDirectory>${project.basedir}/modules/system/layers/base/tomcat-vault/main</outputDirectory>
-                            <finalName>tomcat-vault</finalName>
-                            <appendAssemblyId>false</appendAssemblyId>
 			    <archive>
 		              <manifest>
 		                <addClasspath>true</addClasspath>
@@ -66,6 +63,25 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                   <executions>
+                      <execution>
+                         <id>copy-dependencies</id>
+                         <phase>package</phase>
+                            <goals>
+                               <goal>run</goal>
+                            </goals>
+                            <configuration>
+                               <target name="copy dependency file to the correct module directory">
+                                   <copy file="${project.build.directory}/${project.artifactId}-${project.version}-jar-with-dependencies.jar" tofile="${project.basedir}/modules/system/layers/base/tomcat-vault/main/tomcat-vault.jar" />
+                               </target>
+                            </configuration>                       
+                      </execution>
+                   </executions>
             </plugin>
         </plugins>
     </build>
