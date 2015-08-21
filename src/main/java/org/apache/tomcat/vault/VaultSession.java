@@ -264,19 +264,16 @@ public final class VaultSession {
      * Display info about vault itself in form of AS7 configuration file.
      */
     public void vaultConfigurationDisplay() {
-        System.out.println("Vault Configuration in AS7 config file:");
+        System.out.println("Vault Configuration in tomcat properties file:");
         System.out.println("********************************************");
         System.out.println("...");
-        System.out.println("</extensions>");
-        System.out.println("<vault>");
-        System.out.println("  <vault-option name=\"KEYSTORE_URL\" value=\"" + keystoreURL + "\"/>");
-        System.out.println("  <vault-option name=\"KEYSTORE_PASSWORD\" value=\"" + keystoreMaskedPassword + "\"/>");
-        System.out.println("  <vault-option name=\"KEYSTORE_ALIAS\" value=\"" + vaultAlias + "\"/>");
-        System.out.println("  <vault-option name=\"SALT\" value=\"" + salt + "\"/>");
-        System.out.println("  <vault-option name=\"ITERATION_COUNT\" value=\"" + iterationCount + "\"/>");
-        System.out.println("  <vault-option name=\"ENC_FILE_DIR\" value=\"" + encryptionDirectory + "\"/>");
-        System.out.println("</vault>");
-        System.out.println("<management> ...");
+        System.out.println("KEYSTORE_URL=" + keystoreURL);
+        System.out.println("KEYSTORE_PASSWORD=" + keystoreMaskedPassword);
+        System.out.println("KEYSTORE_ALIAS=" + vaultAlias);
+        System.out.println("SALT=" + salt);
+        System.out.println("ITERATION_COUNT=" + iterationCount);
+        System.out.println("ENC_FILE_DIR=" + encryptionDirectory);
+        System.out.println("...");
         System.out.println("********************************************");
     }
 }
