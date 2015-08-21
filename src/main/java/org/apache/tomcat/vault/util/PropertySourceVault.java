@@ -11,7 +11,7 @@ import org.apache.tomcat.vault.security.vault.SecurityVaultFactory;
 import org.apache.tomcat.vault.security.vault.PicketBoxSecurityVault;
 
 public class PropertySourceVault implements PropertySource {
-    private String PROPERTY_FILE_RELATIVE_PATH = "./conf/vault.properties";
+    private String PROPERTY_FILE_RELATIVE_PATH = "/conf/vault.properties";
 
     private SecurityVault vault;
     private PropertyFileManager pfm;
@@ -20,7 +20,14 @@ public class PropertySourceVault implements PropertySource {
     public PropertySourceVault() {
         vault = null;
         properties = null;
-        pfm = new PropertyFileManager(PROPERTY_FILE_RELATIVE_PATH);
+        String catalinaHome = System.getProperty("catalina.home");
+        if (catalinaHome == null)
+           catalinaHome = System.getProperty("catalina.base");
+        if (catalinaHome == null) {
+           // Here probably need to guess the location...
+           catalinaHome = ".";
+        }
+        pfm = new PropertyFileManager(catalinaHome + PROPERTY_FILE_RELATIVE_PATH);
 
         this.init();
     }
