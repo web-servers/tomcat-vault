@@ -57,13 +57,16 @@ public class PropertySourceVault implements PropertySource {
     public String getProperty(String arg0) {
         String result = null;
 
-        if (vault.isInitialized()) {
-            try {
-                System.out.println("key: " + arg0);
-                result = new String(vault.retrieve(properties.getProperty("VAULT_BLOCK"), arg0, null));
-                System.out.println("key: " + arg0 + " : value: " + result);
-            } catch (SecurityVaultException e) {
-                e.printStackTrace();
+        if (arg0.startsWith("VAULT::")) {
+            String vaultdata[] = arg0.split("::");
+            if (vaultdata.length == 3) {
+                if (vault.isInitialized()) {
+                    try {
+                        result = new String(vault.retrieve(vaultdata[1], vaultdata[2], null));
+                    } catch (SecurityVaultException e) {
+                         e.printStackTrace();
+                    }
+                }
             }
         }
         return result;
