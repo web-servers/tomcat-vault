@@ -39,7 +39,6 @@ Building Instructions:
     SALT=..
     ITERATION_COUNT=..
     ENC_FILE_DIR=..
-    VAULT_BLOCK=..
 
 7. Start Apache Tomcat
 
@@ -55,7 +54,7 @@ in any Apache Tomcat configuration file by ${attribut_name}
      <user username="tomcat" password="acb$123" roles="manager-gui"/>
                           from ||      -------
                                \/ to
-     <user username="tomcat" password="${password}" roles="manager-gui"/>
+     <user username="tomcat" password="${VAULT::TOMCAT::password::}" roles="manager-gui"/>
                                        -----------   
 
 Links:
