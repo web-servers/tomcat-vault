@@ -267,12 +267,12 @@ public final class VaultSession {
         System.out.println("Vault Configuration in tomcat properties file:");
         System.out.println("********************************************");
         System.out.println("...");
-        System.out.println("KEYSTORE_URL=" + keystoreURL);
+        System.out.println("KEYSTORE_URL=" + keystoreURL.replace("\\", "/"));
         System.out.println("KEYSTORE_PASSWORD=" + keystoreMaskedPassword);
         System.out.println("KEYSTORE_ALIAS=" + vaultAlias);
         System.out.println("SALT=" + salt);
         System.out.println("ITERATION_COUNT=" + iterationCount);
-        System.out.println("ENC_FILE_DIR=" + encryptionDirectory);
+        System.out.println("ENC_FILE_DIR=" + encryptionDirectory.replace("\\", "/"));
         System.out.println("...");
         System.out.println("********************************************");
     }
