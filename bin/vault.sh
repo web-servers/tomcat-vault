@@ -75,7 +75,13 @@ if [ "x$JAVA" = "x" ]; then
 fi
 
 if [ "x$JBOSS_MODULEPATH" = "x" ]; then
-    JBOSS_MODULEPATH="$JBOSS_HOME/modules"
+    if [ -d "$JBOSS_HOME/share/java/modules" ];then
+        # rpm or zip install
+        JBOSS_MODULEPATH="$JBOSS_HOME/share/java/modules"
+        JBOSS_HOME="$JBOSS_HOME/share/java"
+    else
+        JBOSS_MODULEPATH="$JBOSS_HOME/modules"
+    fi
 fi
 
 ###
