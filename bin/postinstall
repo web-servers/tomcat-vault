@@ -1,4 +1,4 @@
 #!/bin/sh
 
-sed "0,/JBOSS_HOME=.*/{s||JBOSS_HOME=$PWD|}" tomcat-vault.sh > tomcat-vault.sh.tmp && mv tomcat-vault.sh.tmp tomcat-vault.sh
-sed "0,/JBOSS_HOME=.*/{s||JBOSS_MODULEPATH=$PWD/modules|}" tomcat-vault.sh > tomcat-vault.sh.tmp && mv tomcat-vault.sh.tmp tomcat-vault.sh
+sed "0,/JBOSS_HOME=.*/{s||JBOSS_HOME=$PWD|}" vault.sh > vault.sh.tmp && mv vault.sh.tmp vault.sh
+sed "0,/JBOSS_HOME=.*/{s||JBOSS_MODULEPATH=$PWD/modules|}" vault.sh > vault.sh.tmp && mv vault.sh.tmp vault.sh
