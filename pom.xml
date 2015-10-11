@@ -6,7 +6,7 @@
 
     <groupId>org.apache.tomcat</groupId>
     <artifactId>vault-tomcat</artifactId>
-    <version>1.0.7.Final</version>
+    <version>1.0.8.Final</version>
     <name>Tomcat Vault extension</name>
     <dependencies>
         <dependency>
