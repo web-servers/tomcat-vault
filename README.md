@@ -1,4 +1,4 @@
-# Tomcat-vault
+# Vault for Apache Tomcat
 Tomcat-vault is a PicketLink vault extension for Apache Tomcat. It allows you to "hide" paswords from Tomcat configuration files.
 
 # How to use it ?
