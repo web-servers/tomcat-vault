@@ -9,7 +9,7 @@ Requirements:
 -------------
 
 Building from the distributed tarball:
-* Apache Tomcat 8.20.0+
+* Apache Tomcat 8.0.15+
 * Apache Maven
 
 Building Instructions:
@@ -20,7 +20,7 @@ Building Instructions:
 2. Compile Tomcat Vault from its source directory by running
     $ mvn install
 
-3. Copy the generated jar target/vault-tomcat-X-jar-with-dependencies.jar
+3. Copy the generated jar target/tomcat-vault-X-jar-with-dependencies.jar
    to CATALINA_BASE/lib (where X is the version)
 
 4. Add the following line to CATALINA_BASE/conf/catalina.properties
