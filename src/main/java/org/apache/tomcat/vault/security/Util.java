@@ -36,6 +36,10 @@ import org.jboss.modules.Module;
 import org.jboss.modules.ModuleIdentifier;
 import org.jboss.modules.ModuleLoader;
 
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.apache.tomcat.util.res.StringManager;
+
 /**
  * Util.
  *
@@ -45,6 +49,10 @@ import org.jboss.modules.ModuleLoader;
  */
 public class Util
 {
+
+   private static final StringManager strm = StringManager.getManager(Util.class);
+   private static final Log log = LogFactory.getLog(Util.class);
+
    private static PasswordCache externalPasswordCache;
 
    /**
@@ -107,7 +115,7 @@ public class Util
                   timeOut = Long.parseLong(token[1]);
                } catch (Throwable e) {
                   // ignore
-                  PicketBoxLogger.LOGGER.errorParsingTimeoutNumber();
+                  log.error(strm.getString("util.parsingTimeoutNumber"));
                }
             }
             if (externalPasswordCache == null) {
@@ -158,7 +166,7 @@ public class Util
    private static char[] execPasswordCmd(String passwordCmd)
          throws Exception
    {
-      PicketBoxLogger.LOGGER.traceBeginExecPasswordCmd(passwordCmd);
+      log.trace(strm.getString("util.beginExecPasswordCmd", passwordCmd));
       String password = execCmd(passwordCmd);
       return password.toCharArray();
    }
@@ -261,7 +269,7 @@ public class Util
     */
    private static char[] execPBBasedPasswordCommand(String passwordCmd) throws Exception
    {
-      PicketBoxLogger.LOGGER.traceBeginExecPasswordCmd(passwordCmd);
+      log.trace(strm.getString("util.beginExecPasswordCmd", passwordCmd));
       SecurityManager sm = System.getSecurityManager();
       String password;
       if( sm != null )
@@ -327,7 +335,7 @@ public class Util
             }
 
             int exitCode = p.waitFor();
-            PicketBoxLogger.LOGGER.traceEndExecPasswordCmd(exitCode);
+            log.trace(strm.getString("util.endExecPasswordCmd", exitCode));
             return line;
          }
       };
@@ -376,7 +384,7 @@ public class Util
             }
 
             int exitCode = process.waitFor();
-            PicketBoxLogger.LOGGER.traceEndExecPasswordCmd(exitCode);
+            log.trace(strm.getString("util.endExecPasswordCmd", exitCode));
             return line;
          }
 

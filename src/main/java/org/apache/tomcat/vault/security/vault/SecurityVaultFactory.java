@@ -21,8 +21,11 @@
  */
 package org.apache.tomcat.vault.security.vault;
 
-import org.apache.tomcat.vault.security.PicketBoxLogger;
 import org.apache.tomcat.vault.security.PicketBoxMessages;
+
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.apache.tomcat.util.res.StringManager;
 
 /**
  * A factory to instantiate a {@link SecurityVault}
@@ -31,6 +34,9 @@ import org.apache.tomcat.vault.security.PicketBoxMessages;
  */
 public class SecurityVaultFactory
 {
+   private static final StringManager sm = StringManager.getManager(SecurityVaultFactory.class);
+   private static final Log log = LogFactory.getLog(SecurityVaultFactory.class);
+
    private static String defaultVault = "org.apache.tomcat.vault.security.vault.PicketBoxSecurityVault";
    private static SecurityVault vault= null;
 
@@ -122,6 +128,6 @@ public class SecurityVaultFactory
    }
 
    private static void secondVaultInfo(String module, String className) {
-      PicketBoxLogger.LOGGER.attemptToCreateSecondVault(module != null ? className + " @ " + module : className);
+      log.warn(sm.getString("securityVaultFactory.attemptToCreateSecondVault", module != null ? className + " @ " + module : className));
    }
 }

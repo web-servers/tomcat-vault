@@ -28,8 +28,11 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
 import org.apache.tomcat.vault.security.Base64Utils;
-import org.apache.tomcat.vault.security.PicketBoxLogger;
 import org.apache.tomcat.vault.security.PicketBoxMessages;
+
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.apache.tomcat.util.res.StringManager;
 
 /** Ecrypt a password using the JaasSecurityDomain password
  Usage: PBEUtils salt count domain-password password
@@ -45,6 +48,9 @@ import org.apache.tomcat.vault.security.PicketBoxMessages;
  */
 public class PBEUtils
 {
+   private static final StringManager sm = StringManager.getManager(PBEUtils.class);
+   private static final Log log = LogFactory.getLog(PBEUtils.class);
+
    public static byte[] encode(byte[] secret, String cipherAlgorithm,
       SecretKey cipherKey, PBEParameterSpec cipherSpec)
       throws Exception
@@ -85,7 +91,7 @@ public class PBEUtils
       catch (IllegalArgumentException e) {
          // fallback when original string is was created with faulty version of Base64 
          encoding = Base64Utils.fromb64("0" + secret);
-         PicketBoxLogger.LOGGER.wrongBase64StringUsed("0" + secret);
+         log.warn(sm.getString("PBEUtils.wrongBase64StringUsed", "0" + secret));
       }
       byte[] decode = decode(encoding, cipherAlgorithm, cipherKey, cipherSpec);
       return new String(decode, "UTF-8");

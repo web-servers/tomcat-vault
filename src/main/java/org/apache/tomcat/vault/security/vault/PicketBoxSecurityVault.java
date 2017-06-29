@@ -21,7 +21,6 @@
  */
 package org.apache.tomcat.vault.security.vault;
 
-import org.apache.tomcat.vault.security.PicketBoxLogger;
 import org.apache.tomcat.vault.security.PicketBoxMessages;
 import org.apache.tomcat.vault.security.Util;
 import org.apache.tomcat.vault.security.plugins.PBEUtils;
@@ -53,6 +52,10 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.apache.tomcat.util.res.StringManager;
 
 /**
  * An instance of {@link SecurityVault} that uses
@@ -94,6 +97,9 @@ import java.util.StringTokenizer;
  */
 public class PicketBoxSecurityVault implements SecurityVault
 {
+   private static final StringManager sm = StringManager.getManager(PicketBoxSecurityVault.class);
+   private static final Log log = LogFactory.getLog(PicketBoxSecurityVault.class);
+
    protected boolean finishedInit = false;
 
    protected KeyStore keystore = null;
@@ -213,7 +219,7 @@ public class PicketBoxSecurityVault implements SecurityVault
       // read and possibly convert vault content
       readVaultContent(keystoreURL, encFileDir);
 
-      PicketBoxLogger.LOGGER.infoVaultInitialized();
+      log.info(sm.getString("picketBoxSecurityVault.vaultInitialized"));
       finishedInit = true;     
 
       
@@ -469,8 +475,8 @@ public class PicketBoxSecurityVault implements SecurityVault
 
             if (vaultFileExists(ENCODED_FILE)) {
                 if (vaultFileExists(VAULT_CONTENT_FILE)) {
-                    PicketBoxLogger.LOGGER.mixedVaultDataFound(VAULT_CONTENT_FILE, ENCODED_FILE, decodedEncFileDir
-                            + ENCODED_FILE);
+                    log.error(sm.getString("picketBoxSecurityVault.mixedVaultDataFound",
+                       VAULT_CONTENT_FILE, ENCODED_FILE, decodedEncFileDir + ENCODED_FILE));
                     throw PicketBoxMessages.MESSAGES.mixedVaultDataFound(VAULT_CONTENT_FILE, ENCODED_FILE);
                 } else {
                     convertVaultContent(keystoreURL, alias);
@@ -520,7 +526,7 @@ public class PicketBoxSecurityVault implements SecurityVault
                    String attributeName = tokenizer.nextToken();
                    if (tokenizer.hasMoreTokens()) {
                        attributeName = key.substring(vaultBlock.length() + 1);
-                       PicketBoxLogger.LOGGER.ambiguosKeyForSecurityVaultTransformation("_", vaultBlock, attributeName);
+                       log.info(sm.getString("picketBoxSecurityVault.ambiguosKeyForSecurityVaultTransformation", "_", vaultBlock, attributeName));
                    }
                    byte[] encodedAttributeValue = theContent.get(key);
                    vaultContent.addVaultData(alias, vaultBlock, attributeName, encodedAttributeValue);
@@ -555,11 +561,11 @@ public class PicketBoxSecurityVault implements SecurityVault
        // delete original vault files
        File f = new File(decodedEncFileDir + ENCODED_FILE);
        if (!f.delete()) {
-           PicketBoxLogger.LOGGER.cannotDeleteOriginalVaultFile(f.getCanonicalPath());
+           log.warn(sm.getString("picketBoxSecurityVault.cannotDeleteOriginalVaultFile", f.getCanonicalPath()));
        }
        f = new File(decodedEncFileDir + SHARED_KEY_FILE);
        if (!f.delete()) {
-           PicketBoxLogger.LOGGER.cannotDeleteOriginalVaultFile(f.getCanonicalPath());
+           log.warn(sm.getString("picketBoxSecurityVault.cannotDeleteOriginalVaultFile", f.getCanonicalPath()));
        }
        
    }
@@ -586,7 +592,7 @@ public class PicketBoxSecurityVault implements SecurityVault
          keystore = jceks;
          keyStoreType = "JCEKS"; // after conversion we have to change keyStoreType to the one we really have
          saveKeyStoreToFile(keystoreURL);
-         PicketBoxLogger.LOGGER.keyStoreConvertedToJCEKS(KEYSTORE_URL);
+         log.info(sm.getString("picketBoxSecurityVault.keyStoreConvertedToJCEKS", KEYSTORE_URL));
       }
    }
    
@@ -623,7 +629,7 @@ public class PicketBoxSecurityVault implements SecurityVault
             }
         }
         catch (Exception e) {
-            PicketBoxLogger.LOGGER.vaultDoesnotContainSecretKey(alias);
+            log.info(sm.getString("picketBoxSecurityVault.vaultDoesNotContainSecretKey", alias));
             return null;
         }
         return null;
