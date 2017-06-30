@@ -39,6 +39,8 @@ import org.jboss.modules.ModuleLoader;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.res.StringManager;
+import java.lang.IllegalArgumentException;
+import java.lang.RuntimeException;
 
 /**
  * Util.
@@ -52,6 +54,7 @@ public class Util
 
    private static final StringManager strm = StringManager.getManager(Util.class);
    private static final Log log = LogFactory.getLog(Util.class);
+   private static final StringManager msm = StringManager.getManager("org.apache.tomcat.vault.security.resources");
 
    private static PasswordCache externalPasswordCache;
 
@@ -140,7 +143,7 @@ public class Util
             }            
             password = invokePasswordClass(passwordCmd, module);
          } else {
-            throw PicketBoxMessages.MESSAGES.invalidPasswordCommandType(passwordCmdType);
+            throw new IllegalArgumentException(msm.getString("invalidPasswordCommandType", passwordCmdType));
          }
       }
       return password;
@@ -154,7 +157,7 @@ public class Util
       else if (passwordCmdType.startsWith("CMD"))
          return execPBBasedPasswordCommand(passwordCmd);
       else
-         throw PicketBoxMessages.MESSAGES.invalidPasswordCommandType(passwordCmdType);
+         throw new IllegalArgumentException(msm.getString("invalidPasswordCommandType", passwordCmdType));
    }
 
    /**
@@ -228,7 +231,7 @@ public class Util
              @Override
              public Class<?> run() throws Exception {
                  if (fqn == null || fqn.isEmpty()) {
-                     throw PicketBoxMessages.MESSAGES.loadingNullorEmptyClass();
+                     throw new RuntimeException(msm.getString("loadingNullorEmptyClass"));
                  } else if (module == null ) {
                      ClassLoader cl = Thread.currentThread().getContextClassLoader();
                      return cl.loadClass(fqn);
@@ -241,7 +244,7 @@ public class Util
          });
          return passwdClass;
      } catch (PrivilegedActionException e) {
-         throw PicketBoxMessages.MESSAGES.unableToLoadPasswordClass(e.getCause(), fqn);
+         throw new RuntimeException(msm.getString("unableToLoadPasswordClass", fqn), e.getCause());
      }
    }
 

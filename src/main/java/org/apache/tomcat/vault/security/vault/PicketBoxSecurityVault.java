@@ -21,7 +21,6 @@
  */
 package org.apache.tomcat.vault.security.vault;
 
-import org.apache.tomcat.vault.security.PicketBoxMessages;
 import org.apache.tomcat.vault.security.Util;
 import org.apache.tomcat.vault.security.plugins.PBEUtils;
 import org.apache.tomcat.vault.security.vault.SecurityVault;
@@ -56,6 +55,8 @@ import java.util.StringTokenizer;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.res.StringManager;
+import java.lang.IllegalArgumentException;
+import java.lang.RuntimeException;
 
 /**
  * An instance of {@link SecurityVault} that uses
@@ -99,6 +100,7 @@ public class PicketBoxSecurityVault implements SecurityVault
 {
    private static final StringManager sm = StringManager.getManager(PicketBoxSecurityVault.class);
    private static final Log log = LogFactory.getLog(PicketBoxSecurityVault.class);
+   private static final StringManager msm = StringManager.getManager("org.apache.tomcat.vault.security.resources");
 
    protected boolean finishedInit = false;
 
@@ -160,11 +162,11 @@ public class PicketBoxSecurityVault implements SecurityVault
    public void init(Map<String, Object> options) throws SecurityVaultException
    {
       if(options == null || options.isEmpty())
-         throw PicketBoxMessages.MESSAGES.invalidNullOrEmptyOptionMap("options");
+         throw new IllegalArgumentException(msm.getString("invalidNullOrEmptyOptionMap", "options"));
 
       String keystoreURL = (String) options.get(KEYSTORE_URL);
       if(keystoreURL == null)
-         throw new SecurityVaultException(PicketBoxMessages.MESSAGES.invalidNullOrEmptyOptionMessage(KEYSTORE_URL));
+         throw new SecurityVaultException(msm.getString("invalidNullOrEmptyOptionMessage", KEYSTORE_URL));
 
       if (keystoreURL.contains("${")){
           keystoreURL = keystoreURL.replaceAll(":", StringUtil.PROPERTY_DEFAULT_SEPARATOR);  // replace single ":" with PL default
@@ -173,23 +175,23 @@ public class PicketBoxSecurityVault implements SecurityVault
 
       String password = (String) options.get(KEYSTORE_PASSWORD);
       if(password == null)
-         throw new SecurityVaultException(PicketBoxMessages.MESSAGES.invalidNullOrEmptyOptionMessage(KEYSTORE_PASSWORD));
+         throw new SecurityVaultException(msm.getString("invalidNullOrEmptyOptionMessage", KEYSTORE_PASSWORD));
       if(password.startsWith(PASS_MASK_PREFIX) == false
             && Util.isPasswordCommand(password) == false)
-         throw new SecurityVaultException(PicketBoxMessages.MESSAGES.invalidKeystorePasswordFormatMessage());
+         throw new SecurityVaultException(msm.getString("invalidKeystorePasswordFormatMessage"));
 
       String salt = (String) options.get(SALT);
       if(salt == null)
-         throw new SecurityVaultException(PicketBoxMessages.MESSAGES.invalidNullOrEmptyOptionMessage(SALT));
+         throw new SecurityVaultException(msm.getString("invalidNullOrEmptyOptionMessage", SALT));
 
       String iterationCountStr = (String) options.get(ITERATION_COUNT);
       if(iterationCountStr == null)
-         throw new SecurityVaultException(PicketBoxMessages.MESSAGES.invalidNullOrEmptyOptionMessage(ITERATION_COUNT));
+         throw new SecurityVaultException(msm.getString("invalidNullOrEmptyOptionMessage", ITERATION_COUNT));
       int iterationCount = Integer.parseInt(iterationCountStr);
       
       this.alias = (String) options.get(KEYSTORE_ALIAS);
       if(alias == null)
-         throw new SecurityVaultException(PicketBoxMessages.MESSAGES.invalidNullOrEmptyOptionMessage(KEYSTORE_ALIAS));
+         throw new SecurityVaultException(msm.getString("invalidNullOrEmptyOptionMessage", KEYSTORE_ALIAS));
       
       String keySizeStr = (String) options.get(KEY_SIZE);
       if(keySizeStr != null)
@@ -199,8 +201,7 @@ public class PicketBoxSecurityVault implements SecurityVault
       
       String encFileDir = (String) options.get(ENC_FILE_DIR);
       if(encFileDir == null)
-         throw new SecurityVaultException(PicketBoxMessages.MESSAGES.invalidNullOrEmptyOptionMessage(ENC_FILE_DIR));
-
+         throw new SecurityVaultException(msm.getString("invalidNullOrEmptyOptionMessage", ENC_FILE_DIR));
       
       createKeyStore = (options.get(CREATE_KEYSTORE) != null ? Boolean.parseBoolean((String) options.get(CREATE_KEYSTORE))
             : false);
@@ -254,9 +255,9 @@ public class PicketBoxSecurityVault implements SecurityVault
          throws SecurityVaultException
    {
       if(StringUtil.isNullOrEmpty(vaultBlock))
-         throw PicketBoxMessages.MESSAGES.invalidNullArgument("vaultBlock");
+         throw new IllegalArgumentException(msm.getString("invalidNullArgument", "vaultBlock"));
       if(StringUtil.isNullOrEmpty(attributeName))
-         throw PicketBoxMessages.MESSAGES.invalidNullArgument("attributeName");
+         throw new IllegalArgumentException(msm.getString("invalidNullArgument", "attributeName"));
 
       String av = new String(attributeValue);
       
@@ -269,14 +270,14 @@ public class PicketBoxSecurityVault implements SecurityVault
       }
       catch (Exception e1)
       { 
-         throw new SecurityVaultException(PicketBoxMessages.MESSAGES.unableToEncryptDataMessage(),e1);
+         throw new SecurityVaultException(msm.getString("unableToEncryptDataMessage"), e1);
       }
       
       try {
          writeVaultData();
       }
       catch (IOException e) { 
-         throw new SecurityVaultException(PicketBoxMessages.MESSAGES.unableToWriteVaultDataFileMessage(VAULT_CONTENT_FILE), e);
+         throw new SecurityVaultException(msm.getString("unableToWriteVaultDataFileMessage", VAULT_CONTENT_FILE), e);
       }
    }
 
@@ -286,9 +287,9 @@ public class PicketBoxSecurityVault implements SecurityVault
    public char[] retrieve(String vaultBlock, String attributeName, byte[] sharedKey) throws SecurityVaultException
    {
       if(StringUtil.isNullOrEmpty(vaultBlock))
-         throw PicketBoxMessages.MESSAGES.invalidNullArgument("vaultBlock");
+         throw new IllegalArgumentException(msm.getString("invalidNullArgument", "vaultBlock"));
       if(StringUtil.isNullOrEmpty(attributeName))
-         throw PicketBoxMessages.MESSAGES.invalidNullArgument("attributeName");
+         throw new IllegalArgumentException(msm.getString("invalidNullArgument", "attributeName"));
 
       byte[] encryptedValue = vaultContent.getVaultData(alias, vaultBlock, attributeName);
        
@@ -318,9 +319,9 @@ public class PicketBoxSecurityVault implements SecurityVault
 		   throws SecurityVaultException 
    {
       if(StringUtil.isNullOrEmpty(vaultBlock))
-         throw PicketBoxMessages.MESSAGES.invalidNullArgument("vaultBlock");
+         throw new IllegalArgumentException(msm.getString("invalidNullArgument", "vaultBlock"));
       if(StringUtil.isNullOrEmpty(attributeName))
-         throw PicketBoxMessages.MESSAGES.invalidNullArgument("attributeName");
+         throw new IllegalArgumentException(msm.getString("invalidNullArgument", "attributeName"));
       
       try {
          if (vaultContent.deleteVaultData(alias, vaultBlock, attributeName)) {
@@ -330,7 +331,7 @@ public class PicketBoxSecurityVault implements SecurityVault
          return false;
       }
       catch (IOException e) { 
-         throw new SecurityVaultException(PicketBoxMessages.MESSAGES.unableToWriteVaultDataFileMessage(VAULT_CONTENT_FILE), e);
+         throw new SecurityVaultException(msm.getString("unableToWriteVaultDataFileMessage", VAULT_CONTENT_FILE), e);
       }
 	   catch(Exception e) {
 		   throw new SecurityVaultException(e);
@@ -382,7 +383,7 @@ public class PicketBoxSecurityVault implements SecurityVault
       }
       else {
           if (!createKeyStore) {
-              throw PicketBoxMessages.MESSAGES.vaultDoesnotContainSecretKey(alias);
+              throw new RuntimeException(msm.getString("vaultDoesnotContainSecretKey", alias));
           }
           // try to generate new admin key and store it under specified alias
           EncryptionUtil util = new EncryptionUtil(encryptionAlgorithm, keySize);
@@ -394,10 +395,10 @@ public class PicketBoxSecurityVault implements SecurityVault
               saveKeyStoreToFile(keystoreURL);
           }
           catch (KeyStoreException e) {
-             throw PicketBoxMessages.MESSAGES.noSecretKeyandAliasAlreadyUsed(alias);
+             throw new RuntimeException(msm.getString("noSecretKeyandAliasAlreadyUsed", alias));
           }
           catch (Exception e) {
-             throw PicketBoxMessages.MESSAGES.unableToStoreKeyStoreToFile(e, keystoreURL); 
+             throw new RuntimeException(msm.getString("unableToStoreKeyStoreToFile", keystoreURL), e);
           }
       }
    }
@@ -466,8 +467,7 @@ public class PicketBoxSecurityVault implements SecurityVault
             decodedEncFileDir = StringUtil.getSystemPropertyAsString(encFileDir); // replace single ":" with PL default
 
             if (directoryExists(decodedEncFileDir) == false)
-                throw new SecurityVaultException(
-                        PicketBoxMessages.MESSAGES.fileOrDirectoryDoesNotExistMessage(decodedEncFileDir));
+                throw new SecurityVaultException(msm.getString("fileOrDirectoryDoesNotExistMessage", decodedEncFileDir));
 
             if (!(decodedEncFileDir.endsWith("/") || decodedEncFileDir.endsWith("\\"))) {
                 decodedEncFileDir = decodedEncFileDir + File.separator;
@@ -477,7 +477,7 @@ public class PicketBoxSecurityVault implements SecurityVault
                 if (vaultFileExists(VAULT_CONTENT_FILE)) {
                     log.error(sm.getString("picketBoxSecurityVault.mixedVaultDataFound",
                        VAULT_CONTENT_FILE, ENCODED_FILE, decodedEncFileDir + ENCODED_FILE));
-                    throw PicketBoxMessages.MESSAGES.mixedVaultDataFound(VAULT_CONTENT_FILE, ENCODED_FILE);
+                    throw new RuntimeException(msm.getString("mixedVaultDataFound", VAULT_CONTENT_FILE, ENCODED_FILE));
                 } else {
                     convertVaultContent(keystoreURL, alias);
                 }
@@ -534,7 +534,7 @@ public class PicketBoxSecurityVault implements SecurityVault
            }
        }
        if (adminKey == null) {
-           throw PicketBoxMessages.MESSAGES.missingAdminKeyInOriginalVaultData();
+           throw new RuntimeException(msm.getString("missingAdminKeyInOriginalVaultData"));
        }
        
        // add secret key (admin_key) to keystore 
@@ -612,7 +612,7 @@ public class PicketBoxSecurityVault implements SecurityVault
 
         adminKey = getAdminKey();
         if (adminKey == null) {
-            throw PicketBoxMessages.MESSAGES.vaultDoesnotContainSecretKey(alias);
+            throw new RuntimeException(msm.getString("vaultDoesnotContainSecretKey", alias));
         }
     }
    
@@ -687,17 +687,17 @@ public class PicketBoxSecurityVault implements SecurityVault
             }
         }
         catch (Throwable e) {
-            throw PicketBoxMessages.MESSAGES.unableToGetKeyStore(e, keystoreURL);
+            throw new RuntimeException(msm.getString("unableToGetKeyStore", keystoreURL), e);
         }
 
         try {
             return KeyStoreUtil.getKeyStore(keyStoreType, keystoreURL, keyStorePWD);
         }
         catch (IOException e) {
-            throw PicketBoxMessages.MESSAGES.unableToGetKeyStore(e, keystoreURL);
+            throw new RuntimeException(msm.getString("unableToGetKeyStore", keystoreURL), e);
         }
         catch (GeneralSecurityException e) {
-            throw PicketBoxMessages.MESSAGES.unableToGetKeyStore(e, keystoreURL);
+            throw new RuntimeException(msm.getString("unableToGetKeyStore", keystoreURL), e);
         }
     }
 

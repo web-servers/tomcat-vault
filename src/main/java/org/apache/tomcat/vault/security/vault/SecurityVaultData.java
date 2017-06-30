@@ -30,12 +30,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.tomcat.vault.security.PicketBoxMessages;
 import org.apache.tomcat.vault.util.StringUtil;
 
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.res.StringManager;
+import java.lang.RuntimeException;
 
 /**
  * Security vault data store with version serialized data storage.
@@ -47,6 +47,7 @@ public class SecurityVaultData implements Serializable {
 
     private static final StringManager sm = StringManager.getManager(SecurityVaultData.class);
     private static final Log log = LogFactory.getLog(SecurityVaultData.class);
+    private static final StringManager msm = StringManager.getManager("org.apache.tomcat.vault.security.resources");
 
     /**
      *  Do not change this suid, it is used for handling different versions of serialized data.
@@ -98,7 +99,7 @@ public class SecurityVaultData implements Serializable {
             this.vaultData = (Map<String, byte[]>)ois.readObject();
         }
         else {
-            throw PicketBoxMessages.MESSAGES.unrecognizedVaultContentVersion(String.valueOf(version), "1", String.valueOf(VERSION));
+            throw new RuntimeException(msm.getString("unrecognizedVaultContentVersion", String.valueOf(version), "1", String.valueOf(VERSION)));
         }
     }
 

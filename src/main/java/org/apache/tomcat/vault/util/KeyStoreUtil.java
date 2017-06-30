@@ -39,8 +39,8 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
 
-import org.apache.tomcat.vault.security.PicketBoxMessages;
-
+import org.apache.tomcat.util.res.StringManager;
+import java.lang.IllegalArgumentException;
 
 /**
  * Utility to handle Java Keystore
@@ -51,6 +51,8 @@ import org.apache.tomcat.vault.security.PicketBoxMessages;
  */
 public class KeyStoreUtil
 {
+   private static final StringManager msm = StringManager.getManager("org.apache.tomcat.vault.security.resources");
+
    /**
     * Get the KeyStore
     * @param keyStoreFile
@@ -141,7 +143,7 @@ public class KeyStoreUtil
    public static KeyStore getKeyStore(String keyStoreType, String fileURL, char[] storePass) throws GeneralSecurityException, IOException
    {
       if (fileURL == null)
-         throw PicketBoxMessages.MESSAGES.invalidNullArgument("fileURL");
+         throw new IllegalArgumentException(msm.getString("invalidNullArgument", "fileURL"));
 
       File file = new File(fileURL);
       FileInputStream fis = null;
@@ -168,7 +170,7 @@ public class KeyStoreUtil
    public static KeyStore getKeyStore(String keyStoreType, URL url, char[] storePass) throws GeneralSecurityException, IOException
    {
       if (url == null)
-         throw PicketBoxMessages.MESSAGES.invalidNullArgument("url");
+         throw new IllegalArgumentException(msm.getString("invalidNullArgument", "url"));
 
       InputStream is = null;
       try
@@ -196,7 +198,7 @@ public class KeyStoreUtil
    public static KeyStore getKeyStore(String keyStoreType, InputStream ksStream, char[] storePass) throws GeneralSecurityException, IOException
    {
       if (ksStream == null)
-         throw PicketBoxMessages.MESSAGES.invalidNullArgument("ksStream");
+         throw new IllegalArgumentException(msm.getString("invalidNullArgument", "ksStream"));
       KeyStore ks = KeyStore.getInstance((keyStoreType == null ? KeyStore.getDefaultType() : keyStoreType));
       ks.load(ksStream, storePass);
       return ks;
