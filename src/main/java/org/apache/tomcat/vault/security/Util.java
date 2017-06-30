@@ -32,10 +32,6 @@ import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-import org.jboss.modules.Module;
-import org.jboss.modules.ModuleIdentifier;
-import org.jboss.modules.ModuleLoader;
-
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.res.StringManager;
@@ -74,13 +70,6 @@ public class Util
     * command is a string delimited by ',' where the first part is the actual
     * command and further parts represents its parameters. The comma can be
     * backslashed in order to keep it as a part of the parameter.
-    * '{CLASS[@jboss_module_spec]}classname[:ctorargs]' where the '[:ctorargs]' is an optional
-    * string delimited by the ':' from the classname that will be passed to the
-    * classname ctor. The ctorargs itself is a comma delimited list of strings.
-    * The jboss_module is JBoss Modules module identifier to load the CLASS from.
-    * The password is obtained from classname by invoking a
-    * 'char[] toCharArray()' method if found, otherwise, the 'String toString()'
-    * method is used.
     * @return the password characters
     * @throws Exception
     */
@@ -136,12 +125,6 @@ public class Util
          } else if (passwordCmdType.startsWith("EXT") || passwordCmdType.startsWith("CMD")) {
             // non-cached variant
             password = switchCommandExecution(passwordCmdType, passwordCmd);
-         } else if (passwordCmdType.startsWith("CLASS")) {
-            String module = null;
-            if (passwordCmdType.indexOf('@') > -1) {
-               module = passwordCmdType.split("@")[1];
-            }            
-            password = invokePasswordClass(passwordCmd, module);
          } else {
             throw new IllegalArgumentException(msm.getString("invalidPasswordCommandType", passwordCmdType));
          }
@@ -172,80 +155,6 @@ public class Util
       log.trace(strm.getString("util.beginExecPasswordCmd", passwordCmd));
       String password = execCmd(passwordCmd);
       return password.toCharArray();
-   }
-
-   private static char[] invokePasswordClass(String passwordCmd, String moduleSpec)
-         throws Exception
-   {
-      char[] password = null;
-
-      // Check for a ctor argument delimited by ':'
-      String classname = passwordCmd;
-      String ctorArgs = null;
-      int colon = passwordCmd.indexOf(':');
-      if( colon > 0 )
-      {
-         classname = passwordCmd.substring(0, colon);
-         ctorArgs = passwordCmd.substring(colon+1);
-      }
-      Class<?> c = loadClass(classname, moduleSpec);
-      Object instance = null;
-      // Check for a ctor(String,...) if ctorArg is not null
-      if( ctorArgs != null )
-      {
-         Object[] args = ctorArgs.split(",");
-         Class<?>[] sig = new Class[args.length];
-         ArrayList<Class<?>> sigl = new ArrayList<Class<?>>();
-         for(int n = 0; n < args.length; n ++)
-            sigl.add(String.class);
-         sigl.toArray(sig);
-         Constructor<?> ctor = c.getConstructor(sig);
-         instance = ctor.newInstance(args);
-      }
-      else
-      {
-         // Use the default ctor
-         instance = c.newInstance();
-      }
-
-      // Look for a toCharArray() method
-      try
-      {
-         Class<?>[] sig = {};
-         Method toCharArray = c.getMethod("toCharArray", sig);
-         Object[] args = {};
-         password = (char[]) toCharArray.invoke(instance, args);
-      }
-      catch(NoSuchMethodException e)
-      {
-         String tmp = instance.toString();
-         if( tmp != null )
-            password = tmp.toCharArray();
-      }
-      return password;
-   }
-
-   private static Class<?> loadClass(final String fqn, final String module) {
-      try {
-         Class<?> passwdClass = AccessController.doPrivileged(new PrivilegedExceptionAction<Class<?>>() {
-             @Override
-             public Class<?> run() throws Exception {
-                 if (fqn == null || fqn.isEmpty()) {
-                     throw new RuntimeException(msm.getString("loadingNullorEmptyClass"));
-                 } else if (module == null ) {
-                     ClassLoader cl = Thread.currentThread().getContextClassLoader();
-                     return cl.loadClass(fqn);
-                 } else {
-                     ModuleLoader loader = Module.getCallerModuleLoader();
-                     final Module pwdClassModule = loader.loadModule(ModuleIdentifier.fromString(module));
-                     return pwdClassModule.getClassLoader().loadClass(fqn);
-                 }
-             }
-         });
-         return passwdClass;
-     } catch (PrivilegedActionException e) {
-         throw new RuntimeException(msm.getString("unableToLoadPasswordClass", fqn), e.getCause());
-     }
    }
 
    private static String execCmd(String cmd) throws Exception
@@ -417,8 +326,7 @@ public class Util
             && (passwordCmd.startsWith("{EXT}")
                   || passwordCmd.startsWith("{EXTC")  // it has to be without closing brace to cover :<time in millis>
                   || passwordCmd.startsWith("{CMD}")
-                  || passwordCmd.startsWith("{CMDC")  // it has to be without closing brace to cover :<time in millis>
-                  || passwordCmd.startsWith("{CLASS")); // it has to be without losing brace to cover @jboss_module
+                  || passwordCmd.startsWith("{CMDC"));  // it has to be without closing brace to cover :<time in millis>
    }
 
    /**

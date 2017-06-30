@@ -80,11 +80,6 @@ import java.lang.RuntimeException;
  * command is a string delimited by ',' where the first part is the actual
  * command and further parts represents its parameters. The comma can be
  * backslashed in order to keep it as the part of a parameter.
- * '{CLASS[@modulename]}classname[:ctorargs]' where the '[:ctorargs]' is an optional
- * string delimited by the ':' from the classname that will be passed to the
- * classname ctor. The ctorargs itself is a comma delimited list of strings.
- * The password is obtained from classname by invoking a
- * 'char[] toCharArray()' method if found, otherwise, the 'String toString()'
  * KEYSTORE_ALIAS: Alias where the keypair is located
  * SALT: salt of the masked password. Ensured it is 8 characters in length
  * ITERATION_COUNT: Iteration Count of the masked password.

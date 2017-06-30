@@ -58,9 +58,9 @@ if "x%JBOSS_MODULEPATH%" == "x" (
 rem Display our environment
 echo =========================================================================
 echo.
-echo   JBoss Vault Tool
+echo   Tomcat Vault Tool
 echo.
-echo   JBOSS_HOME: "%JBOSS_HOME%"
+echo   VAULT_HOME: "%JBOSS_HOME%"
 echo.
 echo   JAVA: "%JAVA%"
 echo.
@@ -70,9 +70,8 @@ echo =========================================================================
 echo.
 
 "%JAVA%" %JAVA_OPTS% ^
-    -jar "%JBOSS_RUNJAR%" ^
-    -mp "%JBOSS_MODULEPATH%" ^
-     tomcat-vault ^
+    -cp "%JBOSS_RUNJAR%" ^
+     org.apache.tomcat.vault.VaultTool ^
      %*
 
 :END
