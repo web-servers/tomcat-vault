@@ -10,7 +10,12 @@ import org.apache.tomcat.vault.security.vault.SecurityVaultException;
 import org.apache.tomcat.vault.security.vault.SecurityVaultFactory;
 import org.apache.tomcat.vault.security.vault.PicketBoxSecurityVault;
 
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+
 public class PropertySourceVault implements PropertySource {
+    private static final Log log = LogFactory.getLog(PropertySourceVault.class);
+
     private String PROPERTY_FILE_RELATIVE_PATH = "/conf/vault.properties";
 
     private SecurityVault vault;
@@ -49,7 +54,7 @@ public class PropertySourceVault implements PropertySource {
 
             vault.init(options);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -64,7 +69,7 @@ public class PropertySourceVault implements PropertySource {
                     try {
                         result = new String(vault.retrieve(vaultdata[1], vaultdata[2], null));
                     } catch (SecurityVaultException e) {
-                         e.printStackTrace();
+                        log.error(e.getMessage(), e);
                     }
                 }
             }

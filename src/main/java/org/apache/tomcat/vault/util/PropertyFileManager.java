@@ -3,10 +3,15 @@ package org.apache.tomcat.vault.util;
 import java.io.*;
 import java.util.Properties;
 
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+
 /**
  * Created by mbeck on 3/4/15.
  */
 public class PropertyFileManager {
+    private static final Log log = LogFactory.getLog(PropertyFileManager.class);
+
     private String fname;
 
     public PropertyFileManager(String fname) {
@@ -21,13 +26,13 @@ public class PropertyFileManager {
             // save properties to project root folder
             prop.store(output, null);
         } catch (IOException io) {
-            io.printStackTrace();
+            log.error(io.getMessage(), io);
         } finally {
             if (output != null) {
                 try {
                     output.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage(), e);
                 }
             }
         }
@@ -42,13 +47,13 @@ public class PropertyFileManager {
             // load a properties file
             prop.load(input);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            log.error(ex.getMessage(), ex);
         } finally {
             if (input != null) {
                 try {
                     input.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage(), e);
                 }
             }
         }
