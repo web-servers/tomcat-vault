@@ -7,8 +7,7 @@
     <groupId>org.apache.tomcat</groupId>
     <artifactId>tomcat-vault</artifactId>
     <version>1.0.8.Final</version>
-    <name>Tomcat Vault extension</name>
-
+    <name>Vault extension for Apache Tomcat</name>
     <dependencies>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
@@ -65,6 +64,20 @@
                             </configuration>                       
                       </execution>
                    </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${project.basedir}/modules/system/layers/base/tomcat-vault/main/</directory>
+                            <includes>
+                                <include>tomcat-vault.jar</include>
+                            </includes>
+                        </fileset>
+                    </filesets>
+                </configuration>
             </plugin>
         </plugins>
     </build>
