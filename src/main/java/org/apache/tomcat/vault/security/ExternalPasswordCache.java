@@ -28,6 +28,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.apache.tomcat.util.res.StringManager;
+
 /**
  * External command password cache.
  * Singleton password cache.
@@ -36,6 +40,9 @@ import java.util.Map;
  * @version $Revision:$
  */
 public class ExternalPasswordCache implements PasswordCache {
+
+   private static final StringManager sm = StringManager.getManager(ExternalPasswordCache.class);
+   private static final Log log = LogFactory.getLog(ExternalPasswordCache.class);
 
    private static final ExternalPasswordCache PASSWORD_CACHE = new ExternalPasswordCache(); 
 
@@ -49,7 +56,7 @@ public class ExternalPasswordCache implements PasswordCache {
       }
       catch (NoSuchAlgorithmException e) {
          // Cannot get MD5 algorithm instance for hashing password commands. Using NULL.
-         PicketBoxLogger.LOGGER.errorCannotGetMD5AlgorithmInstance();
+         log.error(sm.getString("externalPasswordCache.cannotGetMD5AlgorithmInstance"));
       }
    }
 
@@ -80,7 +87,7 @@ public class ExternalPasswordCache implements PasswordCache {
    @Override
    public char[] getPassword(String key) {
       String newKey = transformKey(key);
-      PicketBoxLogger.LOGGER.traceRetrievingPasswordFromCache(newKey);
+      log.trace(sm.getString("externalPasswordCache.retrievingPasswordFromCache", newKey));
       PasswordRecord pr = cache.get(newKey);
       return pr.password;
    }
@@ -91,7 +98,7 @@ public class ExternalPasswordCache implements PasswordCache {
    @Override
    public void storePassword(String key, char[] password) {
       String newKey = transformKey(key);
-      PicketBoxLogger.LOGGER.traceStoringPasswordToCache(newKey);
+      log.trace(sm.getString("externalPasswordCache.storingPasswordToCache", newKey));
       PasswordRecord pr = new PasswordRecord();
       pr.timeOut = System.currentTimeMillis();
       pr.password = password;
@@ -122,7 +129,7 @@ public class ExternalPasswordCache implements PasswordCache {
     */
    @Override
    public void reset() {
-      PicketBoxLogger.LOGGER.traceResettingCache();
+      log.trace(sm.getString("externalPasswordCache.resettingCache"));
       cache.clear();
    }
    

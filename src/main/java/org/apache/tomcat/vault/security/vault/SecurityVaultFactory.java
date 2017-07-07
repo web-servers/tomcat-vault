@@ -21,8 +21,10 @@
  */
 package org.apache.tomcat.vault.security.vault;
 
-import org.apache.tomcat.vault.security.PicketBoxLogger;
-import org.apache.tomcat.vault.security.PicketBoxMessages;
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.apache.tomcat.util.res.StringManager;
+import java.lang.IllegalArgumentException;
 
 /**
  * A factory to instantiate a {@link SecurityVault}
@@ -31,6 +33,10 @@ import org.apache.tomcat.vault.security.PicketBoxMessages;
  */
 public class SecurityVaultFactory
 {
+   private static final StringManager sm = StringManager.getManager(SecurityVaultFactory.class);
+   private static final Log log = LogFactory.getLog(SecurityVaultFactory.class);
+   private static final StringManager msm = StringManager.getManager("org.apache.tomcat.vault.security.resources");
+
    private static String defaultVault = "org.apache.tomcat.vault.security.vault.PicketBoxSecurityVault";
    private static SecurityVault vault= null;
 
@@ -65,14 +71,14 @@ public class SecurityVaultFactory
       {
          Class<?> vaultClass = SecurityActions.loadClass(SecurityVaultFactory.class,fqn);
          if(vaultClass == null)
-            throw new SecurityVaultException(PicketBoxMessages.MESSAGES.unableToLoadVaultMessage());
+            throw new SecurityVaultException(msm.getString("unableToLoadVaultMessage"));
          try
          {
             vault = (SecurityVault) vaultClass.newInstance();
          }
          catch (Exception e)
          {
-            throw new SecurityVaultException(PicketBoxMessages.MESSAGES.unableToCreateVaultMessage(), e);
+            throw new SecurityVaultException(msm.getString("unableToCreateVaultMessage"), e);
          }
       }
       else {
@@ -92,10 +98,10 @@ public class SecurityVaultFactory
    public static SecurityVault get(ClassLoader classLoader, String fqn) throws SecurityVaultException
    {
          if (classLoader == null){
-            throw PicketBoxMessages.MESSAGES.invalidNullArgument("classLoader");
+            throw new IllegalArgumentException(msm.getString("invalidNullArgument", "classLoader"));
          }
          if (fqn == null){
-            throw PicketBoxMessages.MESSAGES.invalidNullArgument("fqn");
+            throw new IllegalArgumentException(msm.getString("invalidNullArgument", "fqn"));
          }
 	      SecurityManager sm = System.getSecurityManager();
 	      if (sm != null) {
@@ -105,14 +111,14 @@ public class SecurityVaultFactory
 	      {
 	         Class<?> vaultClass = SecurityActions.loadClass(classLoader,fqn);
 	         if(vaultClass == null)
-	            throw new SecurityVaultException(PicketBoxMessages.MESSAGES.unableToLoadVaultMessage());
+	            throw new SecurityVaultException(msm.getString("unableToLoadVaultMessage"));
 	         try
 	         {
 	            vault = (SecurityVault) vaultClass.newInstance();
 	         }
 	         catch (Exception e)
 	         {
-	            throw new SecurityVaultException(PicketBoxMessages.MESSAGES.unableToCreateVaultMessage(), e);
+	            throw new SecurityVaultException(msm.getString("unableToCreateVaultMessage"), e);
 	         }
 	      }
           else {
@@ -122,6 +128,6 @@ public class SecurityVaultFactory
    }
 
    private static void secondVaultInfo(String module, String className) {
-      PicketBoxLogger.LOGGER.attemptToCreateSecondVault(module != null ? className + " @ " + module : className);
+      log.warn(sm.getString("securityVaultFactory.attemptToCreateSecondVault", module != null ? className + " @ " + module : className));
    }
 }

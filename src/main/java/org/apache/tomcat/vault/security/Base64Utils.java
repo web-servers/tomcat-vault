@@ -23,6 +23,9 @@ package org.apache.tomcat.vault.security;
 
 import java.io.ByteArrayOutputStream;
 
+import org.apache.tomcat.util.res.StringManager;
+import java.lang.IllegalArgumentException;
+
 /**
  * Base64 encoding/decoding utilities. This implementation is not MIME compliant (rfc1421). The padding in this implementation
  * (if used) is a prefix of the output.
@@ -32,6 +35,8 @@ import java.io.ByteArrayOutputStream;
  */
 public class Base64Utils
 {
+
+   private static final StringManager msm = StringManager.getManager("org.apache.tomcat.vault.security.resources");
 
    private static final String base64Str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz./";
    private static final char[] base64Table = base64Str.toCharArray();
@@ -106,7 +111,7 @@ public class Base64Utils
       }
       if (!str.matches(REGEX))
       {
-         throw PicketBoxMessages.MESSAGES.invalidBase64String(str);
+         throw new IllegalArgumentException(msm.getString("invalidBase64String", str));
       }
       ByteArrayOutputStream bos = new ByteArrayOutputStream((str.length() * 3) / 4);
       for (int i = 0, n = str.length(); i < n;)

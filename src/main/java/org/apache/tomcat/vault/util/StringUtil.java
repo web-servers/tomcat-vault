@@ -32,8 +32,11 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
-import org.apache.tomcat.vault.security.PicketBoxMessages;
 import org.apache.tomcat.vault.security.plugins.PBEUtils;
+
+import org.apache.tomcat.util.res.StringManager;
+import java.lang.IllegalArgumentException;
+import java.lang.RuntimeException;
 
 /**
  * Utility dealing with Strings
@@ -42,6 +45,8 @@ import org.apache.tomcat.vault.security.plugins.PBEUtils;
  */
 public class StringUtil
 {
+   private static final StringManager msm = StringManager.getManager("org.apache.tomcat.vault.security.resources");
+
    public static final String PROPERTY_DEFAULT_SEPARATOR = "::";
 	
    /**
@@ -88,7 +93,7 @@ public class StringUtil
    public static String getSystemPropertyAsString(String str)
    {
       if (str == null)
-         throw PicketBoxMessages.MESSAGES.invalidNullArgument("str");
+         throw new IllegalArgumentException(msm.getString("invalidNullArgument", "str"));
       if (str.contains("${"))
       {
          Pattern pattern = Pattern.compile("\\$\\{([^}]+)}");
@@ -112,7 +117,7 @@ public class StringUtil
             sysPropertyValue = SecurityActions.getSystemProperty(subString, defaultValue);
             if (sysPropertyValue.isEmpty())
             {
-               throw PicketBoxMessages.MESSAGES.missingSystemProperty(matcher.group(1));
+               throw new IllegalArgumentException(msm.getString("missingSystemProperty", matcher.group(1)));
             }
             // in case of backslash on Win replace with double backslash
             matcher.appendReplacement(buffer, sysPropertyValue.replace("\\", "\\\\"));
@@ -132,7 +137,7 @@ public class StringUtil
    public static void match(String first, String second)
    {
       if (first.equals(second) == false)
-         throw PicketBoxMessages.MESSAGES.failedToMatchStrings(first, second);
+         throw new RuntimeException(msm.getString("failedToMatchStrings", first, second));
    }
 
    /**

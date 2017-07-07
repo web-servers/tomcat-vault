@@ -51,7 +51,6 @@ if $cygwin ; then
 fi
 
 # Setup JBOSS_HOME
-# Setup JBOSS_HOME
 RESOLVED_JBOSS_HOME=`cd "$DIRNAME/.."; pwd`
 if [ "x$JBOSS_HOME" = "x" ]; then
     # get the full path (without any relative bits)
@@ -88,7 +87,7 @@ if [ "x$JBOSS_MODULEPATH" = "x" ]; then
 fi
 
 ###
-# Setup the JBoss Vault Tool classpath
+# Setup the Tomcat Vault Tool classpath
 ###
 
 
@@ -101,9 +100,9 @@ fi
 # Display our environment
 echo "========================================================================="
 echo ""
-echo "  JBoss Vault"
+echo "  Tomcat Vault"
 echo ""
-echo "  JBOSS_HOME: $JBOSS_HOME"
+echo "  VAULT_HOME: $JBOSS_HOME"
 echo ""
 echo "  JAVA: $JAVA"
 echo ""
@@ -111,8 +110,7 @@ echo "========================================================================="
 echo ""
 
 eval \"$JAVA\" $JAVA_OPTS \
-         -jar \"$JBOSS_HOME/modules/system/layers/base/tomcat-vault/main/tomcat-vault.jar\" \
-         -mp \"${JBOSS_MODULEPATH}\" \
-         tomcat-vault \
+         -cp \"$JBOSS_HOME/modules/system/layers/base/tomcat-vault/main/tomcat-vault.jar\" \
+         org.apache.tomcat.vault.VaultTool \
          '"$@"'
 

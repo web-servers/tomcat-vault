@@ -30,9 +30,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.tomcat.vault.security.PicketBoxLogger;
-import org.apache.tomcat.vault.security.PicketBoxMessages;
 import org.apache.tomcat.vault.util.StringUtil;
+
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.apache.tomcat.util.res.StringManager;
+import java.lang.RuntimeException;
 
 /**
  * Security vault data store with version serialized data storage.
@@ -41,6 +44,10 @@ import org.apache.tomcat.vault.util.StringUtil;
  *
  */
 public class SecurityVaultData implements Serializable {
+
+    private static final StringManager sm = StringManager.getManager(SecurityVaultData.class);
+    private static final Log log = LogFactory.getLog(SecurityVaultData.class);
+    private static final StringManager msm = StringManager.getManager("org.apache.tomcat.vault.security.resources");
 
     /**
      *  Do not change this suid, it is used for handling different versions of serialized data.
@@ -83,16 +90,16 @@ public class SecurityVaultData implements Serializable {
     @SuppressWarnings("unchecked")
     private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
         int version = (Integer) ois.readObject();
-        
-        if (PicketBoxLogger.LOGGER.isDebugEnabled()) {
-            PicketBoxLogger.LOGGER.securityVaultContentVersion(String.valueOf(version), String.valueOf(VERSION));
+
+        if (log.isDebugEnabled()) {
+            log.debug(sm.getString("securityVaultData.securityVaultContentVersion", String.valueOf(version), String.valueOf(VERSION)));
         }
         
         if (version == 1) {
             this.vaultData = (Map<String, byte[]>)ois.readObject();
         }
         else {
-            throw PicketBoxMessages.MESSAGES.unrecognizedVaultContentVersion(String.valueOf(version), "1", String.valueOf(VERSION));
+            throw new RuntimeException(msm.getString("unrecognizedVaultContentVersion", String.valueOf(version), "1", String.valueOf(VERSION)));
         }
     }
 

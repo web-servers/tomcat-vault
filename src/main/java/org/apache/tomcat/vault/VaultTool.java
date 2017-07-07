@@ -90,7 +90,7 @@ public class VaultTool {
             tool = new VaultTool();
 
             System.out.println("**********************************");
-            System.out.println("****  JBoss Vault  ***************");
+            System.out.println("****  Tomcat Vault  **************");
             System.out.println("**********************************");
 
             Console console = System.console();
