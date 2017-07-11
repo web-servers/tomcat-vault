@@ -3,6 +3,7 @@ package org.apache.tomcat.vault.util;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.io.File;
 
 import org.apache.tomcat.util.IntrospectionUtils.PropertySource;
 import org.apache.tomcat.vault.security.vault.SecurityVault;
@@ -23,16 +24,27 @@ public class PropertySourceVault implements PropertySource {
     private Properties properties;
 
     public PropertySourceVault() {
-        vault = null;
-        properties = null;
+        this.vault = null;
+        this.properties = null;
+
         String catalinaHome = System.getProperty("catalina.home");
-        if (catalinaHome == null)
-           catalinaHome = System.getProperty("catalina.base");
-        if (catalinaHome == null) {
-           // Here probably need to guess the location...
-           catalinaHome = ".";
+        String catalinaBase = System.getProperty("catalina.base");
+        String catalina = null;
+
+        if (new File(catalinaBase + PROPERTY_FILE_RELATIVE_PATH).exists()) {
+            catalina = catalinaBase;
+            log.debug("vault.properties found in catalina.base [" + catalina + "]");
+        } else if (new File(catalinaHome + PROPERTY_FILE_RELATIVE_PATH).exists()) {
+            // Using catalina.home is kept for backwards compat
+            catalina = catalinaHome;
+            log.debug("vault.properties found in catalina.home [" + catalina + "]");
+        } else {
+            // Always default to catalina.base if it doesn't exist in either place
+            catalina = catalinaBase;
+            log.debug("vault.properties not found, using catalina.base [" + catalina + "]");
         }
-        pfm = new PropertyFileManager(catalinaHome + PROPERTY_FILE_RELATIVE_PATH);
+
+        this.pfm = new PropertyFileManager(catalina + PROPERTY_FILE_RELATIVE_PATH);
 
         this.init();
     }
