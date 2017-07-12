@@ -42,27 +42,17 @@ esac
 
 # For Cygwin, ensure paths are in UNIX format before anything is touched
 if $cygwin ; then
-    [ -n "$JBOSS_HOME" ] &&
-        JBOSS_HOME=`cygpath --unix "$JBOSS_HOME"`
+    [ -n "$VAULT_HOME" ] &&
+        VAULT_HOME=`cygpath --unix "$VAULT_HOME"`
     [ -n "$JAVA_HOME" ] &&
         JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
     [ -n "$JAVAC_JAR" ] &&
         JAVAC_JAR=`cygpath --unix "$JAVAC_JAR"`
 fi
 
-# Setup JBOSS_HOME
-RESOLVED_JBOSS_HOME=`cd "$DIRNAME/.."; pwd`
-if [ "x$JBOSS_HOME" = "x" ]; then
-    # get the full path (without any relative bits)
-    JBOSS_HOME=$RESOLVED_JBOSS_HOME
-else
- SANITIZED_JBOSS_HOME=`cd "$JBOSS_HOME/.."; pwd`
- if [ "$RESOLVED_JBOSS" != "$SANITIZED_JBOSS_HOME" ]; then
-   echo "WARNING JBOSS_HOME may be pointing to a different installation - unpredictable results may occur."
-   echo ""
- fi
-fi
-export JBOSS_HOME
+# Setup VAULT_HOME
+VAULT_HOME=`cd "$DIRNAME/.."; pwd`
+export VAULT_HOME
 
 # Setup the JVM
 if [ "x$JAVA" = "x" ]; then
@@ -73,16 +63,18 @@ if [ "x$JAVA" = "x" ]; then
     fi
 fi
 
-if [ "x$JBOSS_MODULEPATH" = "x" ]; then
-    if [ -d "$JBOSS_HOME/share/java/modules" ];then
+# Setup the classpath for vault that contains the tomcat jars
+if [ "x$VAULT_CLASSPATH" = "x" ]; then
+    if [ -d "$VAULT_HOME/share/java" ];then
         # rpm or zip install
-        JBOSS_MODULEPATH="$JBOSS_HOME/share/java/modules"
-        JBOSS_HOME="$JBOSS_HOME/share/java"
-    elif [ -d "$JBOSS_HOME/modules" ];then
-        JBOSS_MODULEPATH="$JBOSS_HOME/modules"
+        VAULT_HOME="$VAULT_HOME/share/java"
+        VAULT_CLASSPATH="$VAULT_HOME/tomcat/tomcat-util.jar:$VAULT_HOME/../tomcat/bin/tomcat-juli.jar"
+    elif [ -d "$VAULT_HOME/lib" ];then
+        VAULT_HOME="$VAULT_HOME/lib"
+        VAULT_CLASSPATH="$VAULT_HOME/tomcat-util.jar:$VAULT_HOME/tomcat-juli.jar"
     else
-        JBOSS_MODULEPATH="/usr/share/java/modules"
-        JBOSS_HOME="/usr/share/java"
+        VAULT_HOME="/usr/share/java"
+        VAULT_CLASSPATH="/usr/share/java/tomcat/tomcat-util.jar:/usr/share/tomcat/bin/tomcat-juli.jar"
     fi
 fi
 
@@ -90,11 +82,10 @@ fi
 # Setup the Tomcat Vault Tool classpath
 ###
 
-
 # For Cygwin, switch paths to Windows format before running java
 if $cygwin; then
-    JBOSS_HOME=`cygpath --path --windows "$JBOSS_HOME"`
-    JBOSS_MODULEPATH=`cygpath --path --windows "$JBOSS_MODULEPATH"`
+    VAULT_HOME=`cygpath --path --windows "$VAULT_HOME"`
+    VAULT_CLASSPATH=`cygpath --path --windows "$VAULT_CLASSPATH"`
 fi
 
 # Display our environment
@@ -102,7 +93,7 @@ echo "========================================================================="
 echo ""
 echo "  Tomcat Vault"
 echo ""
-echo "  VAULT_HOME: $JBOSS_HOME"
+echo "  VAULT_HOME: $VAULT_HOME"
 echo ""
 echo "  JAVA: $JAVA"
 echo ""
@@ -110,7 +101,7 @@ echo "========================================================================="
 echo ""
 
 eval \"$JAVA\" $JAVA_OPTS \
-         -cp \"$JBOSS_HOME/modules/system/layers/base/tomcat-vault/main/tomcat-vault.jar\" \
+         -cp \"$VAULT_HOME/tomcat-vault.jar:$VAULT_CLASSPATH\" \
          org.apache.tomcat.vault.VaultTool \
          '"$@"'
 

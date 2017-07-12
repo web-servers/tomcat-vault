@@ -13,11 +13,13 @@
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-util</artifactId>
             <version>8.0.44</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-juli</artifactId>
             <version>8.0.44</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
@@ -58,8 +60,12 @@
                                <goal>run</goal>
                             </goals>
                             <configuration>
-                               <target name="copy dependency file to the correct module directory">
-                                   <copy file="${project.build.directory}/${project.artifactId}-${project.version}-jar-with-dependencies.jar" tofile="${project.basedir}/modules/system/layers/base/tomcat-vault/main/tomcat-vault.jar" />
+                               <target name="Copy dependency file to the correct directory">
+                                   <copy file="${project.build.directory}/${project.artifactId}-${project.version}-jar-with-dependencies.jar" tofile="${project.basedir}/lib/tomcat-vault.jar" />
+                                   <echo message="tomcat-util: ${org.apache.tomcat:tomcat-util:jar}"/>
+                                   <copy file="${org.apache.tomcat:tomcat-util:jar}" tofile="${project.basedir}/lib/tomcat-util.jar" />
+                                   <echo message="tomcat-juli: ${org.apache.tomcat:tomcat-juli:jar}"/>
+                                   <copy file="${org.apache.tomcat:tomcat-juli:jar}" tofile="${project.basedir}/lib/tomcat-juli.jar" />
                                </target>
                             </configuration>                       
                       </execution>
@@ -71,10 +77,7 @@
                 <configuration>
                     <filesets>
                         <fileset>
-                            <directory>${project.basedir}/modules/system/layers/base/tomcat-vault/main/</directory>
-                            <includes>
-                                <include>tomcat-vault.jar</include>
-                            </includes>
+                            <directory>${project.basedir}/lib/</directory>
                         </fileset>
                     </filesets>
                 </configuration>
