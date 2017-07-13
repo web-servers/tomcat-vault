@@ -15,25 +15,10 @@ if "%OS%" == "Windows_NT" (
 )
 
 pushd "%DIRNAME%.."
-set "RESOLVED_JBOSS_HOME=%CD%"
+set "VAULT_HOME=%CD%"
 popd
 
-if "x%JBOSS_HOME%" == "x" (
-  set "JBOSS_HOME=%RESOLVED_JBOSS_HOME%"
-)
-
-pushd "%JBOSS_HOME%"
-set "SANITIZED_JBOSS_HOME=%CD%"
-popd
-
-if /i "%RESOLVED_JBOSS_HOME%" NEQ "%SANITIZED_JBOSS_HOME%" (
-   echo.
-   echo   WARNING:  JBOSS_HOME may be pointing to a different installation - unpredictable results may occur.
-   echo.
-   echo       JBOSS_HOME: "%JBOSS_HOME%"
-   echo.
-)
-rem Setup JBoss specific properties
+rem Setup Tomcat specific properties
 if "x%JAVA_HOME%" == "x" (
   set  JAVA=java
   echo JAVA_HOME is not set. Unexpected results may occur.
@@ -43,16 +28,16 @@ if "x%JAVA_HOME%" == "x" (
 )
 
 rem Find jboss-modules.jar, or we can't continue
-set "JBOSS_RUNJAR=%JBOSS_HOME%\modules\system\layers\base\tomcat-vault\main\tomcat-vault.jar"
-if not exist "%JBOSS_RUNJAR%" (
-  echo Could not locate "%JBOSS_RUNJAR%".
+set "VAULT_RUNJAR=%VAULT_HOME%\lib\tomcat-vault.jar"
+if not exist "%VAULT_RUNJAR%" (
+  echo Could not locate "%VAULT_RUNJAR%".
   echo Please check that you are in the bin directory when running this script.
   goto END
 )
 
-rem Set default module root paths
-if "x%JBOSS_MODULEPATH%" == "x" (
-  set "JBOSS_MODULEPATH=%JBOSS_HOME%\modules"
+rem Set classpath with tomcat jars
+if "x%VAULT_CLASSPATH%" == "x" (
+  set "VAULT_CLASSPATH=%VAULT_HOME%\lib\tomcat-util.jar:%VAULT_HOME%\lib\tomcat-juli.jar"
 )
 
 rem Display our environment
@@ -60,7 +45,7 @@ echo =========================================================================
 echo.
 echo   Tomcat Vault Tool
 echo.
-echo   VAULT_HOME: "%JBOSS_HOME%"
+echo   VAULT_HOME: "%VAULT_HOME%"
 echo.
 echo   JAVA: "%JAVA%"
 echo.
@@ -70,7 +55,7 @@ echo =========================================================================
 echo.
 
 "%JAVA%" %JAVA_OPTS% ^
-    -cp "%JBOSS_RUNJAR%" ^
+    -cp "%VAULT_RUNJAR%" ^
      org.apache.tomcat.vault.VaultTool ^
      %*
 
