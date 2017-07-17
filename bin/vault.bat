@@ -41,6 +41,10 @@ if "x%VAULT_CLASSPATH%" == "x" (
 )
 
 rem Display our environment
+set help=F
+if "%*" == "-h" set help=T
+if "%*" == "--help" set help=T
+if "%help%" == "F" (
 echo =========================================================================
 echo.
 echo   Tomcat Vault Tool
@@ -53,6 +57,7 @@ echo   JAVA_OPTS: "%JAVA_OPTS%"
 echo.
 echo =========================================================================
 echo.
+)
 
 "%JAVA%" %JAVA_OPTS% ^
     -cp "%VAULT_RUNJAR%" ^
