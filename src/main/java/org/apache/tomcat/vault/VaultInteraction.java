@@ -50,7 +50,7 @@ public class VaultInteraction {
         Scanner in = new Scanner(System.in);
         while (true) {
             String commandStr = "Please enter a Digit::   0: Store a secured attribute " + " 1: Check whether a secured attribute exists "
-                    + " 2: Exit";
+                    + " Other: Exit";
 
             System.out.println(commandStr);
             int choice = in.nextInt();
