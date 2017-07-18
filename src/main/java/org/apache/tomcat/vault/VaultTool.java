@@ -103,7 +103,7 @@ public class VaultTool {
             Scanner in = new Scanner(System.in);
             while (true) {
                 String commandStr = "Please enter a Digit::   0: Start Interactive Session "
-                        + " 1: Remove Interactive Session " + " 2: Exit";
+                        + " 1: Remove Interactive Session " + " Other: Exit";
 
                 System.out.println(commandStr);
                 int choice = in.nextInt();
