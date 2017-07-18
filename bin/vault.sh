@@ -89,6 +89,7 @@ if $cygwin; then
 fi
 
 # Display our environment
+if [[ "$@" != "-h" && "$@" != "--help" ]]; then
 echo "========================================================================="
 echo ""
 echo "  Tomcat Vault"
@@ -99,6 +100,7 @@ echo "  JAVA: $JAVA"
 echo ""
 echo "========================================================================="
 echo ""
+fi
 
 eval \"$JAVA\" $JAVA_OPTS \
          -cp \"$VAULT_HOME/tomcat-vault.jar:$VAULT_CLASSPATH\" \
