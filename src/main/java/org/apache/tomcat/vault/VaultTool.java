@@ -34,6 +34,8 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.tomcat.vault.security.vault.SecurityVault;
 
+import java.util.InputMismatchException;
+
 /**
  * Command Line Tool for the default implementation of the {@link SecurityVault}
  *
@@ -106,7 +108,16 @@ public class VaultTool {
                         + " 1: Remove Interactive Session " + " Other: Exit";
 
                 System.out.println(commandStr);
-                int choice = in.nextInt();
+                int choice = -1;
+
+                try {
+                    choice = in.nextInt();
+                } catch (InputMismatchException e) {
+                    System.err.println("'" + in.next() + "' is not a digit:");
+                    e.printStackTrace(System.err);
+                    System.exit(3);
+                }
+
                 switch (choice) {
                     case 0:
                         System.out.println("Starting an interactive session");
