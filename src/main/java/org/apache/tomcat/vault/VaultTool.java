@@ -84,7 +84,7 @@ public class VaultTool {
                     tool.summary();
             } catch (Exception e) {
                 System.err.println("Problem occured:");
-                e.printStackTrace(System.err);
+                System.err.println(e.getMessage());
                 System.exit(1);
             }
             System.exit(returnVal);
@@ -113,8 +113,7 @@ public class VaultTool {
                 try {
                     choice = in.nextInt();
                 } catch (InputMismatchException e) {
-                    System.err.println("'" + in.next() + "' is not a digit:");
-                    e.printStackTrace(System.err);
+                    System.err.println("'" + in.next() + "' is not a digit. Restart and enter a digit.");
                     System.exit(3);
                 }
 
@@ -144,8 +143,7 @@ public class VaultTool {
         try {
             cmdLine = parser.parse(options, args, true);
         } catch (ParseException e) {
-            System.out.println("Problem while parsing command line parameters:");
-            e.printStackTrace(System.err);
+            System.err.println(e.getMessage());
             System.exit(2);
         }
     }
