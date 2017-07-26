@@ -1,38 +1,40 @@
 PicketLink vault extension for Apache Tomcat.
 
-See the NOTICE file distributed with this work for information
-regarding copyright ownership.  See the LICENSE file distributed
-with this work for information regarding licensing.
+See the LICENSE file distributed with this work for information
+regarding licensing.
 =====================================================================
 
 Requirements:
 -------------
 
 Building from the distributed tarball:
+
 * Apache Tomcat 8.0.15+
 * Apache Maven
 
 Building Instructions:
 ----------------------
 
-1. Install Apache Tomcat (from RPM or by hand or however you prefer)
+1. Install Apache Tomcat (from an RPM, by hand, or however you prefer)
 
 2. Compile Tomcat Vault from its source directory by running
+
     $ mvn install
 
-3. Copy the generated jar target/tomcat-vault-X-jar-with-dependencies.jar
-   to CATALINA_BASE/lib (where X is the version)
+3. Copy the generated JAR (target/tomcat-vault-X-jar-with-dependencies.jar)
+    to CATALINA_BASE/lib (where X is the version).
 
 4. Add the following line to CATALINA_BASE/conf/catalina.properties
+
     org.apache.tomcat.util.digester.PROPERTY_SOURCE=org.apache.tomcat.vault.util.PropertySourceVault
 
-5. Configure your vault using ./bin/vault.sh (found the related
-   documentation in the "links" section)
-
+5. Setup your vault using ./bin/vault.sh (found the related documentation
+    in the "links" section)
 
 6. Create a file named vault.properties in CATALINA_BASE/conf 
    containing your vault information as below (all of these keys 
    must be defined and NOT empty)
+
     KEYSTORE_URL=..
     KEYSTORE_PASSWORD=..
     KEYSTORE_ALIAS=..
@@ -42,7 +44,6 @@ Building Instructions:
 
 7. Start Apache Tomcat
 
-
 Usage:
 ------
 
@@ -51,16 +52,18 @@ in any Apache Tomcat configuration file by ${attribute_name}
     
     Example
     =======
-     <user username="tomcat" password="acb$123" roles="manager-gui"/>
-                          from ||      -------
-                               \/ to
-     <user username="tomcat" password="${VAULT::TOMCAT::password::}" roles="manager-gui"/>
-                                       -----------   
+
+    From:
+        <user username="tomcat" password="acb$123" roles="manager-gui"/>
+                                          -------
+
+    To:
+        <user username="tomcat" password="${VAULT::TOMCAT::password::}" roles="manager-gui"/>
+                                          ----------------------------
 
 Links:
 ------
 
-How to configure Vault :
- - https://access.redhat.com/documentation/en-US/JBoss_Enterprise_Application_Platform/6.4/html/Security_Guide/chap-Secure_Passwords_and_Other_Sensitive_Strings_with_Password_Vault.html
+Documentation on how to configure the vault:
 
-$Id: INSTALL,v 1.1 2015/03/23 11:44:00 maxbeck Exp $
+ - https://access.redhat.com/documentation/en-us/red_hat_jboss_web_server/3.1/html-single/installation_guide/#using_a_password_vault_with_red_hat_jboss_web_server_3
