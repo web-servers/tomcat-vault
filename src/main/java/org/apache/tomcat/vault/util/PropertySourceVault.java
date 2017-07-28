@@ -56,6 +56,11 @@ public class PropertySourceVault implements PropertySource {
             // Load vault property file
             properties = pfm.load();
 
+            // If properties is null then there was an exception
+            if (properties == null) {
+                return;
+            }
+
             Map<String, Object> options = new HashMap<String, Object>();
             options.put(PicketBoxSecurityVault.KEYSTORE_URL, properties.getProperty("KEYSTORE_URL"));
             options.put(PicketBoxSecurityVault.KEYSTORE_PASSWORD, properties.getProperty("KEYSTORE_PASSWORD"));
@@ -73,6 +78,11 @@ public class PropertySourceVault implements PropertySource {
     @Override
     public String getProperty(String arg0) {
         String result = null;
+
+        // If the vault failed to init, then return without change
+        if (!vault.isInitialized()) {
+            return arg0;
+        }
 
         if (arg0.startsWith("VAULT::")) {
             String vaultdata[] = arg0.split("::");

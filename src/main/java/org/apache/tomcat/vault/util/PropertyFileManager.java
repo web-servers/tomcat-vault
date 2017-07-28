@@ -48,6 +48,7 @@ public class PropertyFileManager {
             prop.load(input);
         } catch (IOException ex) {
             log.error(ex.getMessage(), ex);
+            return null;
         } finally {
             if (input != null) {
                 try {
