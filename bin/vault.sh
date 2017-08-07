@@ -70,8 +70,8 @@ if [ "x$VAULT_CLASSPATH" = "x" ]; then
         VAULT_HOME="$VAULT_HOME/share/java"
         VAULT_CLASSPATH="$VAULT_HOME/tomcat/tomcat-util.jar:$VAULT_HOME/../tomcat/bin/tomcat-juli.jar"
     elif [ -d "$VAULT_HOME/lib" ];then
-        VAULT_HOME="$VAULT_HOME/lib"
-        VAULT_CLASSPATH="$VAULT_HOME/tomcat-util.jar:$VAULT_HOME/tomcat-juli.jar"
+        VAULT_CLASSPATH="$VAULT_HOME/lib/tomcat-util.jar:$VAULT_HOME/bin/tomcat-juli.jar"
+	    VAULT_HOME="$VAULT_HOME/lib"
     else
         VAULT_HOME="/usr/share/java"
         VAULT_CLASSPATH="/usr/share/java/tomcat/tomcat-util.jar:/usr/share/tomcat/bin/tomcat-juli.jar"
