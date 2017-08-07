@@ -50,6 +50,7 @@ public class VaultInteraction {
         Scanner in = new Scanner(System.in);
         while (true) {
             String commandStr = "Please enter a Digit::   0: Store a secured attribute " + " 1: Check whether a secured attribute exists "
+                    + " 2: Remove a secured attribute "
                     + " Other: Exit";
 
             System.out.println(commandStr);
@@ -93,6 +94,25 @@ public class VaultInteraction {
                             System.out.println("No value has been store for (" + vaultBlock + ", " + attributeName + ")");
                         else
                             System.out.println("A value exists for (" + vaultBlock + ", " + attributeName + ")");
+                    } catch (Exception e) {
+                        System.out.println("Exception occurred:" + e.getLocalizedMessage());
+                    }
+                    break;
+                case 2:
+                    System.out.println("Task: Remove a secured attribute");
+                    try {
+                        vaultBlock = null;
+
+                        while (vaultBlock == null || vaultBlock.length() == 0) {
+                            vaultBlock = console.readLine("Enter Vault Block:");
+                        }
+
+                        attributeName = null;
+
+                        while (attributeName == null || attributeName.length() == 0) {
+                            attributeName = console.readLine("Enter Attribute Name:");
+                        }
+                        vaultNISession.removeSecuredAttribute(vaultBlock, attributeName);
                     } catch (Exception e) {
                         System.out.println("Exception occurred:" + e.getLocalizedMessage());
                     }

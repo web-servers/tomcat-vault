@@ -242,6 +242,24 @@ public final class VaultSession {
     }
 
     /**
+     * Remove secured attribute with given vault block and attribute name. This method can be called only after
+     * successful startVaultSession() call.
+     *
+     * @param vaultBlock
+     * @param attributeName
+     * @return true is password already exists for given vault block and attribute name.
+     * @throws Exception
+     */
+    public void removeSecuredAttribute(String vaultBlock, String attributeName) throws Exception
+    {
+        if (handshakeKey == null)
+        {
+            throw new Exception("checkSecuredAttribute method has to be called after successful startVaultSession() call.");
+        }
+        vault.remove(vaultBlock, attributeName, handshakeKey);
+    }
+
+    /**
      * Display info about stored secured attribute.
      *
      * @param vaultBlock
