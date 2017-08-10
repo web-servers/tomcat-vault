@@ -22,6 +22,7 @@
 package org.apache.tomcat.vault;
 
 import java.io.Console;
+import java.io.PrintStream;
 import java.util.Scanner;
 
 import org.apache.commons.cli.CommandLine;
@@ -55,6 +56,7 @@ public class VaultTool {
     public static final String SEC_ATTR_VALUE_PARAM = "sec-attr";
     public static final String CHECK_SEC_ATTR_EXISTS_PARAM = "check-sec-attr";
     public static final String REMOVE_SEC_ATTR = "remove-sec-attr";
+    public static final String GENERATE_CONFIG_FILE = "generate-config";
     public static final String HELP_PARAM = "help";
 
     private VaultInteractiveSession session = null;
@@ -172,10 +174,12 @@ public class VaultTool {
         Option x = new Option("x", SEC_ATTR_VALUE_PARAM, true, "Secured attribute value (such as password) to store");
         Option c = new Option("c", CHECK_SEC_ATTR_EXISTS_PARAM, false, "Check whether the secured attribute already exists in the vault");
         Option r = new Option("r", REMOVE_SEC_ATTR, false, "Remove the secured attribute from the vault");
+        Option g = new Option("g", GENERATE_CONFIG_FILE, true, "Path for generated config file");
         Option h = new Option("h", HELP_PARAM, false, "Help");
         og.addOption(x);
         og.addOption(c);
         og.addOption(r);
+        og.addOption(g);
         og.addOption(h);
         og.setRequired(true);
         options.addOptionGroup(og);
@@ -217,6 +221,16 @@ public class VaultTool {
             return 0;
         } else if (cmdLine.hasOption(REMOVE_SEC_ATTR)) {
             nonInteractiveSession.removeSecuredAttribute(vaultBlock, attributeName);
+            return 0;
+        } else if (cmdLine.hasOption(GENERATE_CONFIG_FILE)) {
+            PrintStream ps = new PrintStream(cmdLine.getOptionValue(GENERATE_CONFIG_FILE, "vault.properties"));
+            try
+            {
+                nonInteractiveSession.outputConfig(ps);
+            } finally
+            {
+                ps.close();
+            }
             return 0;
         }
         return 100;

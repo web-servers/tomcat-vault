@@ -23,6 +23,8 @@
 package org.apache.tomcat.vault;
 
 import java.io.File;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
@@ -285,13 +287,22 @@ public final class VaultSession {
         System.out.println("Vault Configuration in tomcat properties file:");
         System.out.println("********************************************");
         System.out.println("...");
-        System.out.println("KEYSTORE_URL=" + keystoreURL.replace("\\", "/"));
-        System.out.println("KEYSTORE_PASSWORD=" + keystoreMaskedPassword);
-        System.out.println("KEYSTORE_ALIAS=" + vaultAlias);
-        System.out.println("SALT=" + salt);
-        System.out.println("ITERATION_COUNT=" + iterationCount);
-        System.out.println("ENC_FILE_DIR=" + encryptionDirectory.replace("\\", "/"));
+        outputConfig(System.out);
         System.out.println("...");
         System.out.println("********************************************");
     }
+
+    /**
+     * Print AS7 configuration file to stream.
+     * @param out stream to print config.
+     */
+    public void outputConfig(PrintStream out) {
+        out.println("KEYSTORE_URL=" + keystoreURL.replace("\\", "/"));
+        out.println("KEYSTORE_PASSWORD=" + keystoreMaskedPassword);
+        out.println("KEYSTORE_ALIAS=" + vaultAlias);
+        out.println("SALT=" + salt);
+        out.println("ITERATION_COUNT=" + iterationCount);
+        out.println("ENC_FILE_DIR=" + encryptionDirectory.replace("\\", "/"));
+    }
+
 }
