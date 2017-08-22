@@ -94,10 +94,6 @@ public class VaultTool {
         } else {
             tool = new VaultTool();
 
-            System.out.println("**********************************");
-            System.out.println("****  Tomcat Vault  **************");
-            System.out.println("**********************************");
-
             Console console = System.console();
 
             if (console == null) {
