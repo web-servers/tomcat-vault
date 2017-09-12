@@ -44,7 +44,6 @@ import org.apache.tomcat.vault.security.vault.PicketBoxSecurityVault;
  * Non-interactive session for {@link VaultTool}
  *
  * @author Peter Skopek
- *
  */
 public final class VaultSession {
 
@@ -252,10 +251,8 @@ public final class VaultSession {
      * @return true is password already exists for given vault block and attribute name.
      * @throws Exception
      */
-    public void removeSecuredAttribute(String vaultBlock, String attributeName) throws Exception
-    {
-        if (handshakeKey == null)
-        {
+    public void removeSecuredAttribute(String vaultBlock, String attributeName) throws Exception {
+        if (handshakeKey == null) {
             throw new Exception("checkSecuredAttribute method has to be called after successful startVaultSession() call.");
         }
         vault.remove(vaultBlock, attributeName, handshakeKey);
@@ -294,6 +291,7 @@ public final class VaultSession {
 
     /**
      * Print AS7 configuration file to stream.
+     *
      * @param out stream to print config.
      */
     public void outputConfig(PrintStream out) {

@@ -19,6 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.apache.tomcat.vault;
 
 import java.io.Console;
@@ -210,7 +211,7 @@ public class VaultTool {
                 System.out.println("Password doesn't exist.");
                 return 5;
             }
-        } else if (cmdLine.hasOption(SEC_ATTR_VALUE_PARAM)){
+        } else if (cmdLine.hasOption(SEC_ATTR_VALUE_PARAM)) {
             // add password
             String password = cmdLine.getOptionValue(SEC_ATTR_VALUE_PARAM, "password");
             nonInteractiveSession.addSecuredAttribute(vaultBlock, attributeName, password.toCharArray());
@@ -220,11 +221,9 @@ public class VaultTool {
             return 0;
         } else if (cmdLine.hasOption(GENERATE_CONFIG_FILE)) {
             PrintStream ps = new PrintStream(cmdLine.getOptionValue(GENERATE_CONFIG_FILE, "vault.properties"));
-            try
-            {
+            try {
                 nonInteractiveSession.outputConfig(ps);
-            } finally
-            {
+            } finally {
                 ps.close();
             }
             return 0;

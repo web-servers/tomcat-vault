@@ -19,6 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.apache.tomcat.vault.util;
 
 import java.util.ArrayList;
@@ -35,154 +36,149 @@ import javax.crypto.spec.PBEParameterSpec;
 import org.apache.tomcat.vault.security.plugins.PBEUtils;
 
 import org.apache.tomcat.util.res.StringManager;
+
 import java.lang.IllegalArgumentException;
 import java.lang.RuntimeException;
 
 /**
  * Utility dealing with Strings
+ *
  * @author Anil.Saldhana@redhat.com
  * @since Oct 21, 2009
  */
-public class StringUtil
-{
-   private static final StringManager msm = StringManager.getManager("org.apache.tomcat.vault.security.resources");
+public class StringUtil {
+    private static final StringManager msm = StringManager.getManager("org.apache.tomcat.vault.security.resources");
 
-   public static final String PROPERTY_DEFAULT_SEPARATOR = "::";
-	
-   /**
-    * Check whether the passed string is null or empty
-    * @param str
-    * @return
-    */
-   public static boolean isNotNull(String str)
-   {
-      return str != null && !"".equals(str.trim());
-   }
+    public static final String PROPERTY_DEFAULT_SEPARATOR = "::";
 
-   /**
-    * Check whether the string is null or empty
-    * @param str
-    * @return
-    */
-   public static boolean isNullOrEmpty(String str)
-   {
-      return str == null || str.isEmpty();
-   }
+    /**
+     * Check whether the passed string is null or empty
+     *
+     * @param str
+     * @return
+     */
+    public static boolean isNotNull(String str) {
+        return str != null && !"".equals(str.trim());
+    }
 
-   /**
-    * <p>
-    * Get the system property value if the string is of the format ${sysproperty}
-    * </p>
-    * <p>
-    * You can insert default value when the system property is not set, by
-    * separating it at the beginning with ::
-    * </p>
-    * <p>
-    * <b>Examples:</b>
-    * </p>
-    * 
-    * <p>
-    * ${idp} should resolve to a value if the system property "idp" is set.
-    * </p>
-    * <p>
-    * ${idp::http://localhost:8080} will resolve to http://localhost:8080 if the system property "idp" is not set.
-    * </p>
-    * @param str
-    * @return
-    */
-   public static String getSystemPropertyAsString(String str)
-   {
-      if (str == null)
-         throw new IllegalArgumentException(msm.getString("invalidNullArgument", "str"));
-      if (str.contains("${"))
-      {
-         Pattern pattern = Pattern.compile("\\$\\{([^}]+)}");
-         Matcher matcher = pattern.matcher(str);
+    /**
+     * Check whether the string is null or empty
+     *
+     * @param str
+     * @return
+     */
+    public static boolean isNullOrEmpty(String str) {
+        return str == null || str.isEmpty();
+    }
 
-         StringBuffer buffer = new StringBuffer();
-         String sysPropertyValue = null;
+    /**
+     * <p>
+     * Get the system property value if the string is of the format ${sysproperty}
+     * </p>
+     * <p>
+     * You can insert default value when the system property is not set, by
+     * separating it at the beginning with ::
+     * </p>
+     * <p>
+     * <b>Examples:</b>
+     * </p>
+     * <p>
+     * <p>
+     * ${idp} should resolve to a value if the system property "idp" is set.
+     * </p>
+     * <p>
+     * ${idp::http://localhost:8080} will resolve to http://localhost:8080 if the system property "idp" is not set.
+     * </p>
+     *
+     * @param str
+     * @return
+     */
+    public static String getSystemPropertyAsString(String str) {
+        if (str == null)
+            throw new IllegalArgumentException(msm.getString("invalidNullArgument", "str"));
+        if (str.contains("${")) {
+            Pattern pattern = Pattern.compile("\\$\\{([^}]+)}");
+            Matcher matcher = pattern.matcher(str);
 
-         while (matcher.find())
-         {
-            String subString = matcher.group(1);
-            String defaultValue = "";
+            StringBuffer buffer = new StringBuffer();
+            String sysPropertyValue = null;
 
-            //Look for default value
-            if (subString.contains(StringUtil.PROPERTY_DEFAULT_SEPARATOR))
-            {
-               int index = subString.indexOf(StringUtil.PROPERTY_DEFAULT_SEPARATOR);
-               defaultValue = subString.substring(index + StringUtil.PROPERTY_DEFAULT_SEPARATOR.length());
-               subString = subString.substring(0, index);
+            while (matcher.find()) {
+                String subString = matcher.group(1);
+                String defaultValue = "";
+
+                //Look for default value
+                if (subString.contains(StringUtil.PROPERTY_DEFAULT_SEPARATOR)) {
+                    int index = subString.indexOf(StringUtil.PROPERTY_DEFAULT_SEPARATOR);
+                    defaultValue = subString.substring(index + StringUtil.PROPERTY_DEFAULT_SEPARATOR.length());
+                    subString = subString.substring(0, index);
+                }
+                sysPropertyValue = SecurityActions.getSystemProperty(subString, defaultValue);
+                if (sysPropertyValue.isEmpty()) {
+                    throw new IllegalArgumentException(msm.getString("missingSystemProperty", matcher.group(1)));
+                }
+                // in case of backslash on Win replace with double backslash
+                matcher.appendReplacement(buffer, sysPropertyValue.replace("\\", "\\\\"));
             }
-            sysPropertyValue = SecurityActions.getSystemProperty(subString, defaultValue);
-            if (sysPropertyValue.isEmpty())
-            {
-               throw new IllegalArgumentException(msm.getString("missingSystemProperty", matcher.group(1)));
-            }
-            // in case of backslash on Win replace with double backslash
-            matcher.appendReplacement(buffer, sysPropertyValue.replace("\\", "\\\\"));
-         }
 
-         matcher.appendTail(buffer);
-         str = buffer.toString();
-      }
-      return str;
-   }
+            matcher.appendTail(buffer);
+            str = buffer.toString();
+        }
+        return str;
+    }
 
-   /**
-    * Match two strings else throw a {@link RuntimeException}
-    * @param first
-    * @param second
-    */
-   public static void match(String first, String second)
-   {
-      if (first.equals(second) == false)
-         throw new RuntimeException(msm.getString("failedToMatchStrings", first, second));
-   }
+    /**
+     * Match two strings else throw a {@link RuntimeException}
+     *
+     * @param first
+     * @param second
+     */
+    public static void match(String first, String second) {
+        if (first.equals(second) == false)
+            throw new RuntimeException(msm.getString("failedToMatchStrings", first, second));
+    }
 
-   /**
-    * Given a comma separated string, get the tokens as a {@link List}
-    * @param str
-    * @return
-    */
-   public static List<String> tokenize(String str)
-   {
-      List<String> list = new ArrayList<String>();
-      StringTokenizer tokenizer = new StringTokenizer(str, ",");
-      while (tokenizer.hasMoreTokens())
-      {
-         list.add(tokenizer.nextToken());
-      }
-      return list;
-   }
+    /**
+     * Given a comma separated string, get the tokens as a {@link List}
+     *
+     * @param str
+     * @return
+     */
+    public static List<String> tokenize(String str) {
+        List<String> list = new ArrayList<String>();
+        StringTokenizer tokenizer = new StringTokenizer(str, ",");
+        while (tokenizer.hasMoreTokens()) {
+            list.add(tokenizer.nextToken());
+        }
+        return list;
+    }
 
-   /**
-    * Given a masked password {@link String}, decode it
-    * @param maskedString a password string that is masked
-    * @param salt Salt
-    * @param iterationCount Iteration Count
-    * @return Decoded String
-    * @throws Exception
-    */
-   public static String decode(String maskedString, String salt, int iterationCount) throws Exception
-   {
-      String PASS_MASK_PREFIX = "MASK-";
-      String pbeAlgo = "PBEwithMD5andDES";
-      if (maskedString.startsWith(PASS_MASK_PREFIX))
-      {
-         // Create the PBE secret key 
-         SecretKeyFactory factory = SecretKeyFactory.getInstance(pbeAlgo);
+    /**
+     * Given a masked password {@link String}, decode it
+     *
+     * @param maskedString   a password string that is masked
+     * @param salt           Salt
+     * @param iterationCount Iteration Count
+     * @return Decoded String
+     * @throws Exception
+     */
+    public static String decode(String maskedString, String salt, int iterationCount) throws Exception {
+        String PASS_MASK_PREFIX = "MASK-";
+        String pbeAlgo = "PBEwithMD5andDES";
+        if (maskedString.startsWith(PASS_MASK_PREFIX)) {
+            // Create the PBE secret key
+            SecretKeyFactory factory = SecretKeyFactory.getInstance(pbeAlgo);
 
-         char[] password = "somearbitrarycrazystringthatdoesnotmatter".toCharArray();
-         PBEParameterSpec cipherSpec = new PBEParameterSpec(salt.getBytes(), iterationCount);
-         PBEKeySpec keySpec = new PBEKeySpec(password);
-         SecretKey cipherKey = factory.generateSecret(keySpec);
+            char[] password = "somearbitrarycrazystringthatdoesnotmatter".toCharArray();
+            PBEParameterSpec cipherSpec = new PBEParameterSpec(salt.getBytes(), iterationCount);
+            PBEKeySpec keySpec = new PBEKeySpec(password);
+            SecretKey cipherKey = factory.generateSecret(keySpec);
 
-         maskedString = maskedString.substring(PASS_MASK_PREFIX.length());
-         String decodedValue = PBEUtils.decode64(maskedString, pbeAlgo, cipherKey, cipherSpec);
+            maskedString = maskedString.substring(PASS_MASK_PREFIX.length());
+            String decodedValue = PBEUtils.decode64(maskedString, pbeAlgo, cipherKey, cipherSpec);
 
-         maskedString = decodedValue;
-      }
-      return maskedString;
-   }
+            maskedString = decodedValue;
+        }
+        return maskedString;
+    }
 }
