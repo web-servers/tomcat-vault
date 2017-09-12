@@ -22,11 +22,11 @@
 
 package org.apache.tomcat.vault.util;
 
-import java.io.*;
-import java.util.Properties;
-
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
+
+import java.io.*;
+import java.util.Properties;
 
 /**
  * Created by mbeck on 3/4/15.

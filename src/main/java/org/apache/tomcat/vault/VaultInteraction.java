@@ -22,10 +22,10 @@
 
 package org.apache.tomcat.vault;
 
+import org.apache.tomcat.vault.security.vault.SecurityVault;
+
 import java.io.Console;
 import java.util.Scanner;
-
-import org.apache.tomcat.vault.security.vault.SecurityVault;
 
 /**
  * Interaction with initialized {@link SecurityVault} via the {@link VaultTool}

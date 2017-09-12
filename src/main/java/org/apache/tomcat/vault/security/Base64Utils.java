@@ -22,11 +22,9 @@
 
 package org.apache.tomcat.vault.security;
 
-import java.io.ByteArrayOutputStream;
-
 import org.apache.tomcat.util.res.StringManager;
 
-import java.lang.IllegalArgumentException;
+import java.io.ByteArrayOutputStream;
 
 /**
  * Base64 encoding/decoding utilities. This implementation is not MIME compliant (rfc1421). The padding in this implementation

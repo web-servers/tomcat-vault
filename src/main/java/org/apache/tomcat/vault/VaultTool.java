@@ -22,21 +22,13 @@
 
 package org.apache.tomcat.vault;
 
-import java.io.Console;
-import java.io.PrintStream;
-import java.util.Scanner;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionGroup;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
+import org.apache.commons.cli.*;
 import org.apache.tomcat.vault.security.vault.SecurityVault;
 
+import java.io.Console;
+import java.io.PrintStream;
 import java.util.InputMismatchException;
+import java.util.Scanner;
 
 /**
  * Command Line Tool for the default implementation of the {@link SecurityVault}

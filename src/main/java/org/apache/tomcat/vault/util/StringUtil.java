@@ -22,23 +22,18 @@
 
 package org.apache.tomcat.vault.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.apache.tomcat.util.res.StringManager;
+import org.apache.tomcat.vault.security.plugins.PBEUtils;
 
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
-
-import org.apache.tomcat.vault.security.plugins.PBEUtils;
-
-import org.apache.tomcat.util.res.StringManager;
-
-import java.lang.IllegalArgumentException;
-import java.lang.RuntimeException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Utility dealing with Strings

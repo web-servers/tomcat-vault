@@ -22,27 +22,12 @@
 
 package org.apache.tomcat.vault.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.security.GeneralSecurityException;
-import java.security.Key;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.cert.Certificate;
-
 import org.apache.tomcat.util.res.StringManager;
 
-import java.lang.IllegalArgumentException;
+import java.io.*;
+import java.net.URL;
+import java.security.*;
+import java.security.cert.Certificate;
 
 /**
  * Utility to handle Java Keystore

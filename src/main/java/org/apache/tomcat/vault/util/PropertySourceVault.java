@@ -22,19 +22,18 @@
 
 package org.apache.tomcat.vault.util;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.io.File;
-
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.IntrospectionUtils.PropertySource;
+import org.apache.tomcat.vault.security.vault.PicketBoxSecurityVault;
 import org.apache.tomcat.vault.security.vault.SecurityVault;
 import org.apache.tomcat.vault.security.vault.SecurityVaultException;
 import org.apache.tomcat.vault.security.vault.SecurityVaultFactory;
-import org.apache.tomcat.vault.security.vault.PicketBoxSecurityVault;
 
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 public class PropertySourceVault implements PropertySource {
     private static final Log log = LogFactory.getLog(PropertySourceVault.class);

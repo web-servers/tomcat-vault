@@ -26,8 +26,6 @@ import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.res.StringManager;
 
-import java.lang.IllegalArgumentException;
-
 /**
  * A factory to instantiate a {@link SecurityVault}
  *

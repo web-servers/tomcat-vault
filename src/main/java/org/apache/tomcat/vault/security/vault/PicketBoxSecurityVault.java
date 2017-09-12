@@ -22,6 +22,9 @@
 
 package org.apache.tomcat.vault.security.vault;
 
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.apache.tomcat.util.res.StringManager;
 import org.apache.tomcat.vault.security.Util;
 import org.apache.tomcat.vault.security.plugins.PBEUtils;
 import org.apache.tomcat.vault.util.EncryptionUtil;
@@ -33,29 +36,17 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.channels.FileChannel;
-import java.security.*;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
 import java.security.KeyStore.Entry;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
-
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
-import org.apache.tomcat.util.res.StringManager;
-
-import java.lang.IllegalArgumentException;
-import java.lang.RuntimeException;
 
 /**
  * An instance of {@link SecurityVault} that uses
