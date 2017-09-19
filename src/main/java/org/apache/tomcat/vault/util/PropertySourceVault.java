@@ -22,6 +22,7 @@
 
 package org.apache.tomcat.vault.util;
 
+import org.apache.catalina.Globals;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.IntrospectionUtils.PropertySource;
@@ -29,6 +30,7 @@ import org.apache.tomcat.vault.security.vault.PicketBoxSecurityVault;
 import org.apache.tomcat.vault.security.vault.SecurityVault;
 import org.apache.tomcat.vault.security.vault.SecurityVaultException;
 import org.apache.tomcat.vault.security.vault.SecurityVaultFactory;
+import org.jasypt.util.text.BasicTextEncryptor;
 
 import java.io.File;
 import java.util.HashMap;
@@ -38,18 +40,22 @@ import java.util.Properties;
 public class PropertySourceVault implements PropertySource {
     private static final Log log = LogFactory.getLog(PropertySourceVault.class);
 
-    private String PROPERTY_FILE_RELATIVE_PATH = "/conf/vault.properties";
+    private static final String VAULT_PREFIX = "VAULT::";
+    private static final String CRYPT_PREFIX = "CRYPT::";
+    private static final String PROPERTY_FILE_RELATIVE_PATH = "/conf/vault.properties";
+    private static final String ENCRYPTION_PASSWORD = "ENCRYPTION_PASSWORD";
 
     private SecurityVault vault;
     private PropertyFileManager pfm;
     private Properties properties;
+    private BasicTextEncryptor textEncryptor;
 
     public PropertySourceVault() {
         this.vault = null;
         this.properties = null;
 
-        String catalinaHome = System.getProperty("catalina.home");
-        String catalinaBase = System.getProperty("catalina.base");
+        String catalinaHome = System.getProperty(Globals.CATALINA_HOME_PROP);
+        String catalinaBase = System.getProperty(Globals.CATALINA_BASE_PROP);
         String catalina = null;
 
         if (new File(catalinaBase + PROPERTY_FILE_RELATIVE_PATH).exists()) {
@@ -97,6 +103,18 @@ public class PropertySourceVault implements PropertySource {
             options.put(PicketBoxSecurityVault.ENC_FILE_DIR, properties.getProperty("ENC_FILE_DIR"));
 
             vault.init(options);
+
+            String passwordValue = properties.getProperty(ENCRYPTION_PASSWORD);
+            String encryptionPassword = null;
+            if (passwordValue != null) {
+                encryptionPassword = getProperty(passwordValue);
+            } else {
+                encryptionPassword = System.getProperty("org.apache.tomcat.vault.util." + ENCRYPTION_PASSWORD);
+            }
+            if (encryptionPassword != null) {
+                textEncryptor = new BasicTextEncryptor();
+                textEncryptor.setPassword(encryptionPassword);
+            }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -111,7 +129,7 @@ public class PropertySourceVault implements PropertySource {
             return arg0;
         }
 
-        if (arg0.startsWith("VAULT::")) {
+        if (arg0.startsWith(VAULT_PREFIX)) {
             String vaultdata[] = arg0.split("::");
             if (vaultdata.length == 3) {
                 if (vault.isInitialized()) {
@@ -122,7 +140,20 @@ public class PropertySourceVault implements PropertySource {
                     }
                 }
             }
+        } else if (arg0.startsWith(CRYPT_PREFIX) && textEncryptor != null) {
+            result = textEncryptor.decrypt(arg0.substring(CRYPT_PREFIX.length()));
         }
         return result;
     }
+
+    public static void main(String[] args) {
+        if (args == null || args.length != 2) {
+            System.err.println("Arguments: encryption password, value to encrypt");
+            System.exit(1);
+        }
+        BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+        textEncryptor.setPassword(args[0]);
+        System.out.println("Encrypted value: " + CRYPT_PREFIX + textEncryptor.encrypt(args[1]));
+    }
+
 }
