@@ -44,7 +44,13 @@ public class PropertySourceVault implements PropertySource {
             log.debug("vault.properties not found, using catalina.base [" + catalina + "]");
         }
 
-        this.pfm = new PropertyFileManager(catalina + PROPERTY_FILE_RELATIVE_PATH);
+        String vaultPropertiesPath = catalina + PROPERTY_FILE_RELATIVE_PATH;
+        String vaultProperties = System.getProperty("org.apache.tomcat.vault.util.VAULT_PROPERTIES");
+        if (vaultProperties != null) {
+            vaultPropertiesPath = vaultProperties;
+        }
+
+        this.pfm = new PropertyFileManager(vaultPropertiesPath);
 
         this.init();
     }
