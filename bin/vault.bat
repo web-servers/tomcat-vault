@@ -27,7 +27,7 @@ if "x%JAVA_HOME%" == "x" (
   set "JAVA=%JAVA_HOME%\bin\java"
 )
 
-rem Find jboss-modules.jar, or we can't continue
+rem Find tomcat-vault.jar, or we can't continue
 set "VAULT_RUNJAR=%VAULT_HOME%\lib\tomcat-vault.jar"
 if not exist "%VAULT_RUNJAR%" (
   echo Could not locate "%VAULT_RUNJAR%".
@@ -35,9 +35,9 @@ if not exist "%VAULT_RUNJAR%" (
   goto END
 )
 
-rem Set classpath with tomcat jars
+rem Set classpath with Tomcat jars
 if "x%VAULT_CLASSPATH%" == "x" (
-  set "VAULT_CLASSPATH=%VAULT_RUNJAR%;%VAULT_HOME%\lib\tomcat-util.jar;%VAULT_HOME%\bin\tomcat-juli.jar"
+  set "VAULT_CLASSPATH=%VAULT_RUNJAR%;%VAULT_HOME%\lib\tomcat-util.jar;%VAULT_HOME%\lib\tomcat-juli.jar"
 )
 
 rem Display our environment
