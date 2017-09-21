@@ -19,6 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.apache.tomcat.vault.security.vault;
 
 import java.security.AccessController;
@@ -26,57 +27,41 @@ import java.security.PrivilegedAction;
 
 /**
  * Privileged Blocks
+ *
  * @author Anil.Saldhana@redhat.com
  * @since Aug 12, 2011
  */
-class SecurityActions
-{
-   static Class<?> loadClass(final Class<?> clazz, final String fqn)
-   {
-      return AccessController.doPrivileged(new PrivilegedAction<Class<?>>()
-      {
-         public Class<?> run()
-         {
-            ClassLoader cl = clazz.getClassLoader();
-            Class<?> loadedClass = null;
-            try
-            {
-               loadedClass = cl.loadClass(fqn);
+class SecurityActions {
+    static Class<?> loadClass(final Class<?> clazz, final String fqn) {
+        return AccessController.doPrivileged(new PrivilegedAction<Class<?>>() {
+            public Class<?> run() {
+                ClassLoader cl = clazz.getClassLoader();
+                Class<?> loadedClass = null;
+                try {
+                    loadedClass = cl.loadClass(fqn);
+                } catch (ClassNotFoundException e) {
+                }
+                if (loadedClass == null) {
+                    try {
+                        loadedClass = Thread.currentThread().getContextClassLoader().loadClass(fqn);
+                    } catch (ClassNotFoundException e) {
+                    }
+                }
+                return loadedClass;
             }
-            catch (ClassNotFoundException e)
-            {
-            }
-            if(loadedClass == null)
-            {
-               try
-               {
-                  loadedClass = Thread.currentThread().getContextClassLoader().loadClass(fqn);
-               }
-               catch (ClassNotFoundException e)
-               {
-               }
-            }
-            return loadedClass;
-         }
-      });
+        });
 
-   }
+    }
 
-   static Class<?> loadClass(final ClassLoader classLoader, final String fqn)
-   {
-      return AccessController.doPrivileged(new PrivilegedAction<Class<?>>()
-      {
-         public Class<?> run()
-         {
-            try
-            {
-               return classLoader.loadClass(fqn);
+    static Class<?> loadClass(final ClassLoader classLoader, final String fqn) {
+        return AccessController.doPrivileged(new PrivilegedAction<Class<?>>() {
+            public Class<?> run() {
+                try {
+                    return classLoader.loadClass(fqn);
+                } catch (ClassNotFoundException e) {
+                }
+                return null;
             }
-            catch (ClassNotFoundException e)
-            {
-            }
-            return null;
-         }
-      });
-   }
+        });
+    }
 }

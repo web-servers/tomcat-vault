@@ -19,36 +19,33 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.apache.tomcat.vault.security.vault;
 
 import java.security.GeneralSecurityException;
 
 /**
  * General exception thrown from the vault operations
+ *
  * @author Anil.Saldhana@redhat.com
  * @since Aug 12, 2011
  */
-public class SecurityVaultException extends GeneralSecurityException
-{
-   private static final long serialVersionUID = -463686701228652165L;
+public class SecurityVaultException extends GeneralSecurityException {
+    private static final long serialVersionUID = -463686701228652165L;
 
-   public SecurityVaultException()
-   {
-      super(); 
-   }
+    public SecurityVaultException() {
+        super();
+    }
 
-   public SecurityVaultException(String message, Throwable cause)
-   {
-      super(message, cause); 
-   }
+    public SecurityVaultException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-   public SecurityVaultException(String msg)
-   {
-      super(msg); 
-   }
+    public SecurityVaultException(String msg) {
+        super(msg);
+    }
 
-   public SecurityVaultException(Throwable cause)
-   {
-      super(cause); 
-   }
+    public SecurityVaultException(Throwable cause) {
+        super(cause);
+    }
 }

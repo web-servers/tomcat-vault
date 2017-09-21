@@ -22,6 +22,11 @@
 
 package org.apache.tomcat.vault.security.vault;
 
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.apache.tomcat.util.res.StringManager;
+import org.apache.tomcat.vault.util.StringUtil;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -30,18 +35,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.tomcat.vault.util.StringUtil;
-
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
-import org.apache.tomcat.util.res.StringManager;
-import java.lang.RuntimeException;
-
 /**
  * Security vault data store with version serialized data storage.
- *  
- * @author Peter Skopek (pskopek_at_redhat_dot_com)
  *
+ * @author Peter Skopek (pskopek_at_redhat_dot_com)
  */
 public class SecurityVaultData implements Serializable {
 
@@ -50,17 +47,17 @@ public class SecurityVaultData implements Serializable {
     private static final StringManager msm = StringManager.getManager("org.apache.tomcat.vault.security.resources");
 
     /**
-     *  Do not change this suid, it is used for handling different versions of serialized data.
+     * Do not change this suid, it is used for handling different versions of serialized data.
      */
     private static final long serialVersionUID = 1L;
 
     /**
-     *  Version to denote actual version of SecurityVaultData object.
+     * Version to denote actual version of SecurityVaultData object.
      */
     private static final int VERSION = 1;
-    
-    private transient Map<String, byte[]> vaultData = new ConcurrentHashMap<String,byte[]>();
-    
+
+    private transient Map<String, byte[]> vaultData = new ConcurrentHashMap<String, byte[]>();
+
 
     /**
      * Default constructor.
@@ -70,7 +67,7 @@ public class SecurityVaultData implements Serializable {
 
     /**
      * Writes object to the ObjectOutputSteream.
-     * 
+     *
      * @param oos
      * @throws IOException
      */
@@ -78,11 +75,11 @@ public class SecurityVaultData implements Serializable {
         oos.writeObject(new Integer(VERSION));
         oos.writeObject(vaultData);
     }
-    
+
     /**
-     * Reads object from the ObjectInputStream. This method needs to be changed when implementing 
+     * Reads object from the ObjectInputStream. This method needs to be changed when implementing
      * changes in data and {@link VERSION} is changed.
-     *  
+     *
      * @param ois
      * @throws IOException
      * @throws ClassNotFoundException
@@ -94,71 +91,71 @@ public class SecurityVaultData implements Serializable {
         if (log.isDebugEnabled()) {
             log.debug(sm.getString("securityVaultData.securityVaultContentVersion", String.valueOf(version), String.valueOf(VERSION)));
         }
-        
+
         if (version == 1) {
-            this.vaultData = (Map<String, byte[]>)ois.readObject();
-        }
-        else {
+            this.vaultData = (Map<String, byte[]>) ois.readObject();
+        } else {
             throw new RuntimeException(msm.getString("unrecognizedVaultContentVersion", String.valueOf(version), "1", String.valueOf(VERSION)));
         }
     }
 
     /**
      * Retrieves the data stored in vault storage.
-     * 
-     * @param keyAlias - currently not used (for possible future extension)
+     *
+     * @param keyAlias      - currently not used (for possible future extension)
      * @param vaultBlock
      * @param attributeName
      * @return
      */
     byte[] getVaultData(String keyAlias, String vaultBlock, String attributeName) {
-       return vaultData.get(dataKey(keyAlias, vaultBlock, attributeName));
+        return vaultData.get(dataKey(keyAlias, vaultBlock, attributeName));
     }
 
     /**
-     * 
      * @param keyAlias
      * @param vaultBlock
      * @param attributeName
      * @param encryptedData
      */
     void addVaultData(String keyAlias, String vaultBlock, String attributeName, byte[] encryptedData) {
-       vaultData.put(dataKey(keyAlias, vaultBlock, attributeName), encryptedData);
+        vaultData.put(dataKey(keyAlias, vaultBlock, attributeName), encryptedData);
     }
-    
+
     /**
      * Removes data stored in vault storage.
+     *
      * @param keyAlias
      * @param vaultBlock
      * @param attributeName
      * @return true when vault data has been removed successfully, otherwise false
      */
     boolean deleteVaultData(String keyAlias, String vaultBlock, String attributeName) {
-       if (vaultData.remove(dataKey(keyAlias, vaultBlock, attributeName)) == null) {
-          return false;
-       }
-       return true;
+        if (vaultData.remove(dataKey(keyAlias, vaultBlock, attributeName)) == null) {
+            return false;
+        }
+        return true;
     }
 
     /**
      * Returns mapping keys for all stored data.
+     *
      * @return
      */
     Set<String> getVaultDataKeys() {
-       return vaultData.keySet();
+        return vaultData.keySet();
     }
-    
+
     /**
      * Creates new format for data key in vault. All parameters has to be non-null.
-     * 
-     * @param keyAlias - currently not used (for possible future extension) 
+     *
+     * @param keyAlias      - currently not used (for possible future extension)
      * @param vaultBlock
      * @param attributeName
      * @param alias
      * @return
      */
     private static String dataKey(String keyAlias, String vaultBlock, String attributeName) {
-       return vaultBlock + StringUtil.PROPERTY_DEFAULT_SEPARATOR + attributeName; 
+        return vaultBlock + StringUtil.PROPERTY_DEFAULT_SEPARATOR + attributeName;
     }
-    
+
 }

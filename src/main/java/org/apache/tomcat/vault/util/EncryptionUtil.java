@@ -19,120 +19,113 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.apache.tomcat.vault.util;
 
-import java.security.KeyPair;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
+package org.apache.tomcat.vault.util;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 
 /**
  * Encryption/Decryption utility
+ *
  * @author Anil.Saldhana@redhat.com
  * @since Aug 12, 2011
  */
-public class EncryptionUtil
-{
-   private String encryptionAlgorithm;
-   private int keySize;
+public class EncryptionUtil {
+    private String encryptionAlgorithm;
+    private int keySize;
 
-   public EncryptionUtil(String encryptionAlgorithm, int keySize)
-   {
-      this.encryptionAlgorithm = encryptionAlgorithm;
-      this.keySize = keySize;
-   }
-   
-   public SecretKey generateKey() throws NoSuchAlgorithmException
-   {
-      KeyGenerator kgen = KeyGenerator.getInstance(encryptionAlgorithm);
-      kgen.init(keySize);
-      SecretKey key = kgen.generateKey();
-      return key;
-   }
-   
-   public byte[] encrypt(byte[] data, PublicKey publicKey, SecretKey key) throws Exception
-   {
-     // Get the KeyGenerator
-      KeyGenerator kgen = KeyGenerator.getInstance(this.encryptionAlgorithm);
-      kgen.init(keySize);
- 
-      byte[] publicKeyEncoded = publicKey.getEncoded();
+    public EncryptionUtil(String encryptionAlgorithm, int keySize) {
+        this.encryptionAlgorithm = encryptionAlgorithm;
+        this.keySize = keySize;
+    }
 
-      SecretKeySpec skeySpec = new SecretKeySpec(key.getEncoded(), encryptionAlgorithm);
+    public SecretKey generateKey() throws NoSuchAlgorithmException {
+        KeyGenerator kgen = KeyGenerator.getInstance(encryptionAlgorithm);
+        kgen.init(keySize);
+        SecretKey key = kgen.generateKey();
+        return key;
+    }
+
+    public byte[] encrypt(byte[] data, PublicKey publicKey, SecretKey key) throws Exception {
+        // Get the KeyGenerator
+        KeyGenerator kgen = KeyGenerator.getInstance(this.encryptionAlgorithm);
+        kgen.init(keySize);
+
+        byte[] publicKeyEncoded = publicKey.getEncoded();
+
+        SecretKeySpec skeySpec = new SecretKeySpec(key.getEncoded(), encryptionAlgorithm);
 
 
-      // Instantiate the cipher 
-      Cipher cipher = Cipher.getInstance(encryptionAlgorithm);
+        // Instantiate the cipher
+        Cipher cipher = Cipher.getInstance(encryptionAlgorithm);
 
-      cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
 
-      byte[] encrypted =
-        cipher.doFinal( data);
-      return encrypted;
-   }
-   
-   public byte[] decrypt(byte[] encryptedData, KeyPair keypair, SecretKeySpec keySpec ) throws Exception
-   {
-      // Get the KeyGenerator
-      KeyGenerator kgen = KeyGenerator.getInstance(this.encryptionAlgorithm);
-      kgen.init(keySize);
- 
-      byte[] publicKeyEncoded = keypair.getPrivate().getEncoded();
- 
+        byte[] encrypted =
+                cipher.doFinal(data);
+        return encrypted;
+    }
 
-      // Instantiate the cipher 
-      Cipher cipher = Cipher.getInstance(encryptionAlgorithm);
-    
-      cipher.init(Cipher.DECRYPT_MODE, keySpec);
-      byte[] original = cipher.doFinal(encryptedData); 
-      return original;
-   }
-   
-   public byte[] decrypt(byte[] encryptedData, KeyPair keypair, SecretKey key ) throws Exception
-   {
-      // Get the KeyGenerator
-      KeyGenerator kgen = KeyGenerator.getInstance(this.encryptionAlgorithm);
-      kgen.init(keySize);
- 
-      byte[] publicKeyEncoded = keypair.getPrivate().getEncoded();
+    public byte[] decrypt(byte[] encryptedData, KeyPair keypair, SecretKeySpec keySpec) throws Exception {
+        // Get the KeyGenerator
+        KeyGenerator kgen = KeyGenerator.getInstance(this.encryptionAlgorithm);
+        kgen.init(keySize);
 
-      SecretKeySpec skeySpec = new SecretKeySpec(key.getEncoded(), encryptionAlgorithm);
+        byte[] publicKeyEncoded = keypair.getPrivate().getEncoded();
 
-      // Instantiate the cipher 
-      Cipher cipher = Cipher.getInstance(encryptionAlgorithm);
-    
-      cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-      byte[] original = cipher.doFinal(encryptedData); 
-      return original;
-   }
-   
-   public byte[] encrypt(byte[] data, SecretKey key) throws Exception
-   {
-      SecretKeySpec skeySpec = new SecretKeySpec(key.getEncoded(), encryptionAlgorithm);
 
-      // Instantiate the cipher 
-      Cipher cipher = Cipher.getInstance(encryptionAlgorithm);
+        // Instantiate the cipher
+        Cipher cipher = Cipher.getInstance(encryptionAlgorithm);
 
-      cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+        cipher.init(Cipher.DECRYPT_MODE, keySpec);
+        byte[] original = cipher.doFinal(encryptedData);
+        return original;
+    }
 
-      byte[] encrypted =
-        cipher.doFinal( data);
-      return encrypted;
-   }
+    public byte[] decrypt(byte[] encryptedData, KeyPair keypair, SecretKey key) throws Exception {
+        // Get the KeyGenerator
+        KeyGenerator kgen = KeyGenerator.getInstance(this.encryptionAlgorithm);
+        kgen.init(keySize);
 
-   public byte[] decrypt(byte[] encryptedData, SecretKeySpec keySpec ) throws Exception
-   {
+        byte[] publicKeyEncoded = keypair.getPrivate().getEncoded();
 
-      // Instantiate the cipher 
-      Cipher cipher = Cipher.getInstance(encryptionAlgorithm);
+        SecretKeySpec skeySpec = new SecretKeySpec(key.getEncoded(), encryptionAlgorithm);
 
-      cipher.init(Cipher.DECRYPT_MODE, keySpec);
-      byte[] original = cipher.doFinal(encryptedData);
-      return original;
-   }
+        // Instantiate the cipher
+        Cipher cipher = Cipher.getInstance(encryptionAlgorithm);
+
+        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+        byte[] original = cipher.doFinal(encryptedData);
+        return original;
+    }
+
+    public byte[] encrypt(byte[] data, SecretKey key) throws Exception {
+        SecretKeySpec skeySpec = new SecretKeySpec(key.getEncoded(), encryptionAlgorithm);
+
+        // Instantiate the cipher
+        Cipher cipher = Cipher.getInstance(encryptionAlgorithm);
+
+        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+
+        byte[] encrypted =
+                cipher.doFinal(data);
+        return encrypted;
+    }
+
+    public byte[] decrypt(byte[] encryptedData, SecretKeySpec keySpec) throws Exception {
+
+        // Instantiate the cipher
+        Cipher cipher = Cipher.getInstance(encryptionAlgorithm);
+
+        cipher.init(Cipher.DECRYPT_MODE, keySpec);
+        byte[] original = cipher.doFinal(encryptedData);
+        return original;
+    }
 
 }

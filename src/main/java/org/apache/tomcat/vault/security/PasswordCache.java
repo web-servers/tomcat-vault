@@ -19,43 +19,45 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
+
 package org.apache.tomcat.vault.security;
 
 /**
  * Interface to cache passwords retrieved from external commands.
- * 
+ *
  * @author Peter Skopek <pskopek@redhat.com>
  * @version $Revision:$
  */
 public interface PasswordCache {
-   
-   /**
-    * Checks whether the cache already contains given key. Non zero timeOut will be checked to expire cache entry.  
-    *   
-    * @param key
-    * @param timeOut
-    * @return
-    */
-   public boolean contains(String key, long timeOut);
-   
-   /**
-    * Get password from the cache.
-    * Returns null if there is no such key in the cache.
-    * 
-    * @param key
-    * @return
-    */
-   char[] getPassword(String key); 
-   
-   /**
-    * Store password to the cache.
-    * @param key
-    * @param password
-    */
-   public void storePassword(String key, char[] password);
 
-   /**
-    * Reset the cache (clean whole cache and start all over again).
-    */
-   public void reset();
+    /**
+     * Checks whether the cache already contains given key. Non zero timeOut will be checked to expire cache entry.
+     *
+     * @param key
+     * @param timeOut
+     * @return
+     */
+    public boolean contains(String key, long timeOut);
+
+    /**
+     * Get password from the cache.
+     * Returns null if there is no such key in the cache.
+     *
+     * @param key
+     * @return
+     */
+    char[] getPassword(String key);
+
+    /**
+     * Store password to the cache.
+     *
+     * @param key
+     * @param password
+     */
+    public void storePassword(String key, char[] password);
+
+    /**
+     * Reset the cache (clean whole cache and start all over again).
+     */
+    public void reset();
 }

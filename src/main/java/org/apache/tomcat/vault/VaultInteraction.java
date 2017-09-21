@@ -19,12 +19,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.apache.tomcat.vault;
+
+import org.apache.tomcat.vault.security.vault.SecurityVault;
 
 import java.io.Console;
 import java.util.Scanner;
-
-import org.apache.tomcat.vault.security.vault.SecurityVault;
 
 /**
  * Interaction with initialized {@link SecurityVault} via the {@link VaultTool}

@@ -22,29 +22,26 @@
 
 package org.apache.tomcat.vault;
 
-import java.io.File;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Map;
+import org.apache.tomcat.vault.security.plugins.PBEUtils;
+import org.apache.tomcat.vault.security.vault.PicketBoxSecurityVault;
+import org.apache.tomcat.vault.security.vault.SecurityVault;
+import org.apache.tomcat.vault.security.vault.SecurityVaultException;
+import org.apache.tomcat.vault.security.vault.SecurityVaultFactory;
 
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
-
-import org.apache.tomcat.vault.security.plugins.PBEUtils;
-import org.apache.tomcat.vault.security.vault.SecurityVault;
-import org.apache.tomcat.vault.security.vault.SecurityVaultException;
-import org.apache.tomcat.vault.security.vault.SecurityVaultFactory;
-import org.apache.tomcat.vault.security.vault.PicketBoxSecurityVault;
+import java.io.File;
+import java.io.PrintStream;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Non-interactive session for {@link VaultTool}
  *
  * @author Peter Skopek
- *
  */
 public final class VaultSession {
 
@@ -252,10 +249,8 @@ public final class VaultSession {
      * @return true is password already exists for given vault block and attribute name.
      * @throws Exception
      */
-    public void removeSecuredAttribute(String vaultBlock, String attributeName) throws Exception
-    {
-        if (handshakeKey == null)
-        {
+    public void removeSecuredAttribute(String vaultBlock, String attributeName) throws Exception {
+        if (handshakeKey == null) {
             throw new Exception("checkSecuredAttribute method has to be called after successful startVaultSession() call.");
         }
         vault.remove(vaultBlock, attributeName, handshakeKey);
@@ -294,6 +289,7 @@ public final class VaultSession {
 
     /**
      * Print AS7 configuration file to stream.
+     *
      * @param out stream to print config.
      */
     public void outputConfig(PrintStream out) {

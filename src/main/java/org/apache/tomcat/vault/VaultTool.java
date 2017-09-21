@@ -19,23 +19,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.apache.tomcat.vault;
+
+import org.apache.commons.cli.*;
+import org.apache.tomcat.vault.security.vault.SecurityVault;
 
 import java.io.Console;
 import java.io.PrintStream;
-import java.util.Scanner;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionGroup;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
-import org.apache.tomcat.vault.security.vault.SecurityVault;
-
 import java.util.InputMismatchException;
+import java.util.Scanner;
 
 /**
  * Command Line Tool for the default implementation of the {@link SecurityVault}
@@ -210,7 +203,7 @@ public class VaultTool {
                 System.out.println("Password doesn't exist.");
                 return 5;
             }
-        } else if (cmdLine.hasOption(SEC_ATTR_VALUE_PARAM)){
+        } else if (cmdLine.hasOption(SEC_ATTR_VALUE_PARAM)) {
             // add password
             String password = cmdLine.getOptionValue(SEC_ATTR_VALUE_PARAM, "password");
             nonInteractiveSession.addSecuredAttribute(vaultBlock, attributeName, password.toCharArray());
@@ -220,11 +213,9 @@ public class VaultTool {
             return 0;
         } else if (cmdLine.hasOption(GENERATE_CONFIG_FILE)) {
             PrintStream ps = new PrintStream(cmdLine.getOptionValue(GENERATE_CONFIG_FILE, "vault.properties"));
-            try
-            {
+            try {
                 nonInteractiveSession.outputConfig(ps);
-            } finally
-            {
+            } finally {
                 ps.close();
             }
             return 0;

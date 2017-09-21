@@ -22,123 +22,122 @@
 
 package org.apache.tomcat.vault.security;
 
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.apache.tomcat.util.res.StringManager;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
-import org.apache.tomcat.util.res.StringManager;
-
 /**
  * External command password cache.
  * Singleton password cache.
- * 
+ *
  * @author Peter Skopek <pskopek@redhat.com>
  * @version $Revision:$
  */
 public class ExternalPasswordCache implements PasswordCache {
 
-   private static final StringManager sm = StringManager.getManager(ExternalPasswordCache.class);
-   private static final Log log = LogFactory.getLog(ExternalPasswordCache.class);
+    private static final StringManager sm = StringManager.getManager(ExternalPasswordCache.class);
+    private static final Log log = LogFactory.getLog(ExternalPasswordCache.class);
 
-   private static final ExternalPasswordCache PASSWORD_CACHE = new ExternalPasswordCache(); 
+    private static final ExternalPasswordCache PASSWORD_CACHE = new ExternalPasswordCache();
 
-   private Map<String, PasswordRecord> cache;
-   private MessageDigest md5Digest = null;
+    private Map<String, PasswordRecord> cache;
+    private MessageDigest md5Digest = null;
 
-   private ExternalPasswordCache() {
-      cache = Collections.synchronizedMap(new HashMap<String, PasswordRecord>());
-      try {
-         md5Digest = MessageDigest.getInstance("MD5");
-      }
-      catch (NoSuchAlgorithmException e) {
-         // Cannot get MD5 algorithm instance for hashing password commands. Using NULL.
-         log.error(sm.getString("externalPasswordCache.cannotGetMD5AlgorithmInstance"));
-      }
-   }
+    private ExternalPasswordCache() {
+        cache = Collections.synchronizedMap(new HashMap<String, PasswordRecord>());
+        try {
+            md5Digest = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            // Cannot get MD5 algorithm instance for hashing password commands. Using NULL.
+            log.error(sm.getString("externalPasswordCache.cannotGetMD5AlgorithmInstance"));
+        }
+    }
 
-   public static ExternalPasswordCache getExternalPasswordCacheInstance() {
-      SecurityManager sm = System.getSecurityManager();
-      if (sm != null) {
-         sm.checkPermission(new RuntimePermission(ExternalPasswordCache.class.getName() + ".getExternalPasswordCacheInstance"));
-      }
-      return PASSWORD_CACHE;
-   }
-   
-   /* (non-Javadoc)
-    * @see org.jboss.security.PasswordCache#contains(java.lang.String)
-    */
-   @Override
-   public boolean contains(String key, long timeOut) {
-      String transformedKey = transformKey(key);
-      PasswordRecord pr = cache.get(transformedKey);
-      if (pr != null && (timeOut == 0 || System.currentTimeMillis() - pr.timeOut < timeOut)) {
-         return true;
-      }      
-      return false;
-   }
+    public static ExternalPasswordCache getExternalPasswordCacheInstance() {
+        SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            sm.checkPermission(new RuntimePermission(ExternalPasswordCache.class.getName() + ".getExternalPasswordCacheInstance"));
+        }
+        return PASSWORD_CACHE;
+    }
 
-   /* (non-Javadoc)
-    * @see org.jboss.security.PasswordCache#getPassword(java.lang.String)
-    */
-   @Override
-   public char[] getPassword(String key) {
-      String newKey = transformKey(key);
-      log.trace(sm.getString("externalPasswordCache.retrievingPasswordFromCache", newKey));
-      PasswordRecord pr = cache.get(newKey);
-      return pr.password;
-   }
+    /* (non-Javadoc)
+     * @see org.jboss.security.PasswordCache#contains(java.lang.String)
+     */
+    @Override
+    public boolean contains(String key, long timeOut) {
+        String transformedKey = transformKey(key);
+        PasswordRecord pr = cache.get(transformedKey);
+        if (pr != null && (timeOut == 0 || System.currentTimeMillis() - pr.timeOut < timeOut)) {
+            return true;
+        }
+        return false;
+    }
 
-   /* (non-Javadoc)
-    * @see org.jboss.security.PasswordCache#storePassword(java.lang.String, char[])
-    */
-   @Override
-   public void storePassword(String key, char[] password) {
-      String newKey = transformKey(key);
-      log.trace(sm.getString("externalPasswordCache.storingPasswordToCache", newKey));
-      PasswordRecord pr = new PasswordRecord();
-      pr.timeOut = System.currentTimeMillis();
-      pr.password = password;
-      cache.put(newKey, pr);
-   }
-   
-   private String transformKey(String key) {
-      String newKey = key;
-      if (md5Digest != null) {
-         md5Digest.reset();
-         byte[] bt = key.getBytes();
-         byte[] md5 = md5Digest.digest(bt);
-         newKey = new String(Base64Utils.tob64(md5));
-      }
-      return newKey;
-   }
-   
-   /**
-    * Get number of cached passwords. 
-    * Mainly for testing purpose.
-    */
-   public int getCachedPasswordsCount() {
-      return cache.size();
-   }
+    /* (non-Javadoc)
+     * @see org.jboss.security.PasswordCache#getPassword(java.lang.String)
+     */
+    @Override
+    public char[] getPassword(String key) {
+        String newKey = transformKey(key);
+        log.trace(sm.getString("externalPasswordCache.retrievingPasswordFromCache", newKey));
+        PasswordRecord pr = cache.get(newKey);
+        return pr.password;
+    }
 
-   /* (non-Javadoc)
-    * @see org.jboss.security.PasswordCache#reset()
-    */
-   @Override
-   public void reset() {
-      log.trace(sm.getString("externalPasswordCache.resettingCache"));
-      cache.clear();
-   }
-   
-   
+    /* (non-Javadoc)
+     * @see org.jboss.security.PasswordCache#storePassword(java.lang.String, char[])
+     */
+    @Override
+    public void storePassword(String key, char[] password) {
+        String newKey = transformKey(key);
+        log.trace(sm.getString("externalPasswordCache.storingPasswordToCache", newKey));
+        PasswordRecord pr = new PasswordRecord();
+        pr.timeOut = System.currentTimeMillis();
+        pr.password = password;
+        cache.put(newKey, pr);
+    }
+
+    private String transformKey(String key) {
+        String newKey = key;
+        if (md5Digest != null) {
+            md5Digest.reset();
+            byte[] bt = key.getBytes();
+            byte[] md5 = md5Digest.digest(bt);
+            newKey = new String(Base64Utils.tob64(md5));
+        }
+        return newKey;
+    }
+
+    /**
+     * Get number of cached passwords.
+     * Mainly for testing purpose.
+     */
+    public int getCachedPasswordsCount() {
+        return cache.size();
+    }
+
+    /* (non-Javadoc)
+     * @see org.jboss.security.PasswordCache#reset()
+     */
+    @Override
+    public void reset() {
+        log.trace(sm.getString("externalPasswordCache.resettingCache"));
+        cache.clear();
+    }
+
+
 }
 
 class PasswordRecord {
 
-   long timeOut;
-   char[] password;
-   
+    long timeOut;
+    char[] password;
+
 }

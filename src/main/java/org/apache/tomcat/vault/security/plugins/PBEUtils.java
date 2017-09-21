@@ -21,17 +21,16 @@
 */
 package org.apache.tomcat.vault.security.plugins;
 
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.apache.tomcat.util.res.StringManager;
+import org.apache.tomcat.vault.security.Base64Utils;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
-
-import org.apache.tomcat.vault.security.Base64Utils;
-
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
-import org.apache.tomcat.util.res.StringManager;
 
 /** Ecrypt a password using the JaasSecurityDomain password
  Usage: PBEUtils salt count domain-password password

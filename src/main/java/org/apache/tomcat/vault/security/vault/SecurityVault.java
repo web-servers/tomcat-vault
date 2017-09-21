@@ -19,6 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.apache.tomcat.vault.security.vault;
 
 import java.util.Map;
@@ -26,76 +27,84 @@ import java.util.Set;
 
 /**
  * Vault for secure storage of attributes
+ *
  * @author Anil.Saldhana@redhat.com
  * @since Aug 12, 2011
  */
-public interface SecurityVault
-{
-   /**
-    * Initialize the vault
-    * @param options
-    */
-   void init(Map<String,Object> options) throws SecurityVaultException;
-   
-   /**
-    * Determine if the vault is initialized
-    * @return
-    */
-   boolean isInitialized();
+public interface SecurityVault {
+    /**
+     * Initialize the vault
+     *
+     * @param options
+     */
+    void init(Map<String, Object> options) throws SecurityVaultException;
 
-   /**
-    * Retrieve the shared key from the vault
-    * @param handshakeOptions a set of options that the vault identifies for handshake
-    * @return
-    * @throws SecurityVaultException
-    */
-   byte[] handshake(Map<String,Object> handshakeOptions) throws SecurityVaultException;
-   
-   /**
-    * Get the currently vaulted VaultBlock_attribute Names
-    * @return
-    * @throws SecurityVaultException
-    */
-   Set<String> keyList() throws SecurityVaultException;
-   
-   /**
-    * Check whether an attribute value exists in the vault
-    * @param vaultBlock
-    * @param attributeName
-    * @return
-    * @throws SecurityVaultException
-    * @since v4.0.3
-    */
-   boolean exists(String vaultBlock, String attributeName) throws SecurityVaultException;
-   
-   /**
-    * Store an attribute value
-    * @param vaultBlock a string value that brings in the uniqueness
-    * @param attributeName name of the attribute
-    * @param attributeValue
-    * @param sharedKey arbitrary binary data in java keystore
-    * @throws SecurityVaultException
-    */
-   void store(String vaultBlock, String attributeName,char[] attributeValue, byte[] sharedKey) throws SecurityVaultException;
+    /**
+     * Determine if the vault is initialized
+     *
+     * @return
+     */
+    boolean isInitialized();
 
-   /**
-    * Retrieve the attribute value
-    * @param vaultBlock
-    * @param attributeName
-    * @param sharedKey
-    * @return
-    * @throws SecurityVaultException
-    */
-   char[] retrieve(String vaultBlock, String attributeName, byte[] sharedKey) throws SecurityVaultException;
-   
-   /**
-    * Remove an existing attribute value
-    * @param vaultBlock
-    * @param attributeName
-    * @param sharedKey
-    * @return true if remove was successful, false otherwise
-    * @throws SecurityVaultException
-    * @since v4.0.4.final
-    */
-   boolean remove(String vaultBlock, String attributeName, byte[] sharedKey) throws SecurityVaultException;
+    /**
+     * Retrieve the shared key from the vault
+     *
+     * @param handshakeOptions a set of options that the vault identifies for handshake
+     * @return
+     * @throws SecurityVaultException
+     */
+    byte[] handshake(Map<String, Object> handshakeOptions) throws SecurityVaultException;
+
+    /**
+     * Get the currently vaulted VaultBlock_attribute Names
+     *
+     * @return
+     * @throws SecurityVaultException
+     */
+    Set<String> keyList() throws SecurityVaultException;
+
+    /**
+     * Check whether an attribute value exists in the vault
+     *
+     * @param vaultBlock
+     * @param attributeName
+     * @return
+     * @throws SecurityVaultException
+     * @since v4.0.3
+     */
+    boolean exists(String vaultBlock, String attributeName) throws SecurityVaultException;
+
+    /**
+     * Store an attribute value
+     *
+     * @param vaultBlock     a string value that brings in the uniqueness
+     * @param attributeName  name of the attribute
+     * @param attributeValue
+     * @param sharedKey      arbitrary binary data in java keystore
+     * @throws SecurityVaultException
+     */
+    void store(String vaultBlock, String attributeName, char[] attributeValue, byte[] sharedKey) throws SecurityVaultException;
+
+    /**
+     * Retrieve the attribute value
+     *
+     * @param vaultBlock
+     * @param attributeName
+     * @param sharedKey
+     * @return
+     * @throws SecurityVaultException
+     */
+    char[] retrieve(String vaultBlock, String attributeName, byte[] sharedKey) throws SecurityVaultException;
+
+    /**
+     * Remove an existing attribute value
+     *
+     * @param vaultBlock
+     * @param attributeName
+     * @param sharedKey
+     * @return true if remove was successful, false otherwise
+     * @throws SecurityVaultException
+     * @since v4.0.4.final
+     */
+    boolean remove(String vaultBlock, String attributeName, byte[] sharedKey) throws SecurityVaultException;
 }
