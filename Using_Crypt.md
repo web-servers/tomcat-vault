@@ -4,7 +4,7 @@ A new feature was added to the Vault which allows users to utilize encrypted pas
 
 ### Installation
 
-See the [INSTALL](./INSTALL) file for instructions on installation and usage of the vault (minus the CRYPT feature).
+See the [INSTALL](./INSTALL.md) file for instructions on installation and usage of the vault (minus the CRYPT feature).
 
 ### Using the CRYPT feature
 
