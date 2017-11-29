@@ -268,6 +268,11 @@ public class PicketBoxSecurityVault implements SecurityVault {
 
         byte[] encryptedValue = vaultContent.getVaultData(alias, vaultBlock, attributeName);
 
+        if (encryptedValue == null) {
+            throw new SecurityVaultException(sm.getString("picketBoxSecurityVault.attributeNotInVault", alias,
+                vaultBlock, attributeName));
+        }
+
         SecretKeySpec secretKeySpec = new SecretKeySpec(adminKey.getEncoded(), encryptionAlgorithm);
         EncryptionUtil encUtil = new EncryptionUtil(encryptionAlgorithm, keySize);
         try {
