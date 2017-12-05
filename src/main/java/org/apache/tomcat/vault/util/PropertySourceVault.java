@@ -148,15 +148,20 @@ public class PropertySourceVault implements PropertySource {
     }
 
     private static void outputResult(String arg, BasicTextEncryptor textEncryptor) {
-        System.out.println("Specified value: " + arg);
-        System.out.println("Encrypted value: " + CRYPT_PREFIX + textEncryptor.encrypt(arg));
+        if (arg.startsWith(CRYPT_PREFIX)) {
+            System.out.println("Specified value: " + arg);
+            System.out.println("Decrypted value: " + textEncryptor.decrypt(arg.substring(CRYPT_PREFIX.length())));
+        } else {
+            System.out.println("Specified value: " + arg);
+            System.out.println("Encrypted value: " + CRYPT_PREFIX + textEncryptor.encrypt(arg));
+        }
     }
 
     public static void main(String[] args) {
         if (args.length == 0 || args.length > 2 || args.length == 1 && VAULT_PROPERTIES == null) {
             System.err.println("Invalid Arguments: you need to follow either of the followings");
-            System.err.println(" - Specify two arguments 'encryption password' and 'value to encrypt'");
-            System.err.println(" - Specify one argument 'value to encrypt' with the system property 'org.apache.tomcat.vault.util.VAULT_PROPERTIES' which points to vault.properties");
+            System.err.println(" - Specify two arguments 'encryption password' and 'value to encrypt/decrypt'");
+            System.err.println(" - Specify one argument 'value to encrypt/decrypt' with the system property 'org.apache.tomcat.vault.util.VAULT_PROPERTIES' which points to vault.properties");
             System.exit(1);
         }
         BasicTextEncryptor textEncryptor = new BasicTextEncryptor();

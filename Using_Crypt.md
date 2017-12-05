@@ -39,6 +39,14 @@ $ tail -n2 conf/tomcat-users.xml | head -n1
 <user username="tomcat" password="${CRYPT::9kofG2Sd1qUdDT0+XIKx+rzjsAZulJJQ}" roles="manager-gui"/>
 ~~~
 
+Also you can decrypt the encrypted string (= starting with "CRYPT::") with the following command if you want to check the actual value:
+
+~~~
+$ java -cp lib/tomcat-juli.jar:lib/tomcat-util.jar:lib/tomcat-vault.jar org.apache.tomcat.vault.util.PropertySourceVault MyEncryptionPassword CRYPT::9kofG2Sd1qUdDT0+XIKx+rzjsAZulJJQ
+Specified value: CRYPT::9kofG2Sd1qUdDT0+XIKx+rzjsAZulJJQ
+Decrypted value: MyPassword
+~~~
+
 ---
 
 If you store the encrption password in vault like:
