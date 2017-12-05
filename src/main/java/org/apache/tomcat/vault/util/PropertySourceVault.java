@@ -44,6 +44,7 @@ public class PropertySourceVault implements PropertySource {
     private static final String CRYPT_PREFIX = "CRYPT::";
     private static final String PROPERTY_FILE_RELATIVE_PATH = "/conf/vault.properties";
     private static final String ENCRYPTION_PASSWORD = "ENCRYPTION_PASSWORD";
+    private static final String VAULT_PROPERTIES = System.getProperty("org.apache.tomcat.vault.util.VAULT_PROPERTIES");
 
     private SecurityVault vault;
     private PropertyFileManager pfm;
@@ -71,11 +72,7 @@ public class PropertySourceVault implements PropertySource {
             log.debug("vault.properties not found, using catalina.base [" + catalina + "]");
         }
 
-        String vaultPropertiesPath = catalina + PROPERTY_FILE_RELATIVE_PATH;
-        String vaultProperties = System.getProperty("org.apache.tomcat.vault.util.VAULT_PROPERTIES");
-        if (vaultProperties != null) {
-            vaultPropertiesPath = vaultProperties;
-        }
+        String vaultPropertiesPath = VAULT_PROPERTIES != null ? VAULT_PROPERTIES : catalina + PROPERTY_FILE_RELATIVE_PATH;
 
         this.pfm = new PropertyFileManager(vaultPropertiesPath);
 
@@ -146,14 +143,44 @@ public class PropertySourceVault implements PropertySource {
         return result;
     }
 
+    private Properties getVaultProperties() {
+        return properties;
+    }
+
+    private static void outputResult(String arg, BasicTextEncryptor textEncryptor) {
+        if (arg.startsWith(CRYPT_PREFIX)) {
+            System.out.println("Specified value: " + arg);
+            System.out.println("Decrypted value: " + textEncryptor.decrypt(arg.substring(CRYPT_PREFIX.length())));
+        } else {
+            System.out.println("Specified value: " + arg);
+            System.out.println("Encrypted value: " + CRYPT_PREFIX + textEncryptor.encrypt(arg));
+        }
+    }
+
     public static void main(String[] args) {
-        if (args == null || args.length != 2) {
-            System.err.println("Arguments: encryption password, value to encrypt");
+        if (args.length == 0 || args.length > 2 || args.length == 1 && VAULT_PROPERTIES == null) {
+            System.err.println("Invalid Arguments: you need to follow either of the followings");
+            System.err.println(" - Specify two arguments 'encryption password' and 'value to encrypt/decrypt'");
+            System.err.println(" - Specify one argument 'value to encrypt/decrypt' with the system property 'org.apache.tomcat.vault.util.VAULT_PROPERTIES' which points to vault.properties");
             System.exit(1);
         }
         BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-        textEncryptor.setPassword(args[0]);
-        System.out.println("Encrypted value: " + CRYPT_PREFIX + textEncryptor.encrypt(args[1]));
+        if (args.length == 2) {
+            textEncryptor.setPassword(args[0]);
+            outputResult(args[1], textEncryptor);
+        } else {
+            PropertySourceVault psv = new PropertySourceVault();
+            Properties prop = psv.getVaultProperties();
+            if (prop != null) {
+                String vaulfRef = prop.getProperty(ENCRYPTION_PASSWORD);
+                if (vaulfRef == null) {
+                    System.err.println("ERROR: ENCRYPTION_PASSWORD is missing in vault.properties");
+                    System.exit(1);
+                }
+                textEncryptor.setPassword(psv.getProperty(vaulfRef));
+            }
+            outputResult(args[0], textEncryptor);
+        }
     }
 
 }
