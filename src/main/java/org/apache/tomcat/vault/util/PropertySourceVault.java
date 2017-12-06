@@ -146,14 +146,4 @@ public class PropertySourceVault implements PropertySource {
         return result;
     }
 
-    public static void main(String[] args) {
-        if (args == null || args.length != 2) {
-            System.err.println("Arguments: encryption password, value to encrypt");
-            System.exit(1);
-        }
-        BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-        textEncryptor.setPassword(args[0]);
-        System.out.println("Encrypted value: " + CRYPT_PREFIX + textEncryptor.encrypt(args[1]));
-    }
-
 }

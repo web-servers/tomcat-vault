@@ -30,6 +30,8 @@ import java.io.PrintStream;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import org.jasypt.util.text.BasicTextEncryptor;
+
 /**
  * Command Line Tool for the default implementation of the {@link SecurityVault}
  *
@@ -51,6 +53,7 @@ public class VaultTool {
     public static final String REMOVE_SEC_ATTR = "remove-sec-attr";
     public static final String GENERATE_CONFIG_FILE = "generate-config";
     public static final String HELP_PARAM = "help";
+    public static final String CRYPT = "encrypt";
 
     private VaultInteractiveSession session = null;
     private VaultSession nonInteractiveSession = null;
@@ -165,11 +168,13 @@ public class VaultTool {
         Option r = new Option("r", REMOVE_SEC_ATTR, false, "Remove the secured attribute from the vault");
         Option g = new Option("g", GENERATE_CONFIG_FILE, true, "Path for generated config file");
         Option h = new Option("h", HELP_PARAM, false, "Help");
+        Option E = new Option("E", CRYPT, false, "Encrypt value using CRYPT feature");
         og.addOption(x);
         og.addOption(c);
         og.addOption(r);
         og.addOption(g);
         og.addOption(h);
+        og.addOption(E);
         og.setRequired(true);
         options.addOptionGroup(og);
     }
@@ -178,6 +183,28 @@ public class VaultTool {
 
         if (cmdLine.hasOption(HELP_PARAM)) {
             printUsage();
+            return 100;
+        }
+
+        // If using the CRYPT feature without specifying a keystore, you don't need the vault
+        if (cmdLine.hasOption(CRYPT) && !cmdLine.hasOption((KEYSTORE_PARAM))) {
+            if (cmdLine.getArgs().length == 2) {
+                // Check to see if they tried to specify a VAULT value without a keystore :)
+                if (cmdLine.getArgs()[0].startsWith("VAULT::")) {
+                    System.out.println("You have specified a value stored in the vault, but have not supplied the " +
+                            "required vault options.");
+                    System.out.println("Please retry with a plain text value, or with the appropriate vault options.");
+                    return 100;
+                }
+
+                BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+                textEncryptor.setPassword(cmdLine.getArgs()[0]);
+                System.out.println("Encrypted value: CRYPT::" + textEncryptor.encrypt(cmdLine.getArgs()[1]));
+            } else {
+                System.out.println("Arguments: encryption password, value to encrypt");
+            }
+            // Regardless of the return here we have to return 100 or the nonInteractiveSession will cause an NPE
+            // since there is no vault.
             return 100;
         }
 
@@ -219,6 +246,15 @@ public class VaultTool {
                 ps.close();
             }
             return 0;
+        } else if (cmdLine.hasOption(CRYPT)) {
+            // We need the encryption password and a value to encrypt
+            if (cmdLine.getArgs().length == 2) {
+                nonInteractiveSession.encryptValueWithCRYPT(cmdLine.getArgs()[0], cmdLine.getArgs()[1]);
+            } else {
+                System.out.println("Arguments: encryption password, value to encrypt");
+            }
+            // Return 100 to prevent printing the summary
+            return 100;
         }
         return 100;
     }
