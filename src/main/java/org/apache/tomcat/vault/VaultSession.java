@@ -38,6 +38,8 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jasypt.util.text.BasicTextEncryptor;
+
 /**
  * Non-interactive session for {@link VaultTool}
  *
@@ -254,6 +256,40 @@ public final class VaultSession {
             throw new Exception("checkSecuredAttribute method has to be called after successful startVaultSession() call.");
         }
         vault.remove(vaultBlock, attributeName, handshakeKey);
+    }
+
+    /**
+     * Encrypt a value using the CRYPT feature.
+     *
+     * @param encryptionPassword Encryption password; could be stored in the vault
+     * @param valueToEncrypt
+     *
+     * @throws Exception if there is an issue retrieving the encryptionPassword from the vault.
+     */
+    public void encryptValueWithCRYPT(String encryptionPassword, String valueToEncrypt) throws Exception {
+        String decryptedPassword = null;
+
+        // if the encryptionPassword is in the VAULT, decrypt it
+        // This logic came from o.a.t.vault.util.PropertySourceVault, may need to move to a helper
+        // class to reduce duplication.
+        if (encryptionPassword.startsWith("VAULT::")) {
+            String vaultdata[] = encryptionPassword.split("::");
+            if (vaultdata.length == 3) {
+                if (vault.isInitialized()) {
+                    try {
+                        decryptedPassword = new String(vault.retrieve(vaultdata[1], vaultdata[2], null));
+                    } catch (SecurityVaultException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+            }
+        } else {
+            decryptedPassword = encryptionPassword;
+        }
+
+        BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+        textEncryptor.setPassword(decryptedPassword);
+        System.out.println("Encrypted value: CRYPT::" + textEncryptor.encrypt(valueToEncrypt));
     }
 
     /**
