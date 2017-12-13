@@ -210,6 +210,10 @@ public class VaultTool {
 
         String keystoreURL = cmdLine.getOptionValue(KEYSTORE_PARAM, "vault.keystore");
         String keystorePassword = cmdLine.getOptionValue(KEYSTORE_PASSWORD_PARAM, "");
+        if (!cmdLine.hasOption(KEYSTORE_PASSWORD_PARAM)) {
+            keystorePassword = new String(System.console().readPassword("Enter keystore password: "));
+        }
+
         String encryptionDirectory = cmdLine.getOptionValue(ENC_DIR_PARAM, "vault");
         String salt = cmdLine.getOptionValue(SALT_PARAM, "12345678");
         int iterationCount = Integer.parseInt(cmdLine.getOptionValue(ITERATION_PARAM, "23"));
