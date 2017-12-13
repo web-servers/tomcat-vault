@@ -224,10 +224,10 @@ public class VaultTool {
         if (cmdLine.hasOption(CHECK_SEC_ATTR_EXISTS_PARAM)) {
             // check password
             if (nonInteractiveSession.checkSecuredAttribute(vaultBlock, attributeName)) {
-                System.out.println("Password already exists.");
+                System.out.println("Secured attribute already exists.");
                 return 0;
             } else {
-                System.out.println("Password doesn't exist.");
+                System.out.println("Secured attribute does not exist.");
                 return 5;
             }
         } else if (cmdLine.hasOption(SEC_ATTR_VALUE_PARAM)) {
