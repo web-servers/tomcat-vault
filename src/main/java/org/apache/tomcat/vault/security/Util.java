@@ -43,7 +43,7 @@ import java.util.StringTokenizer;
  */
 public class Util {
 
-    private static final StringManager strm = StringManager.getManager(Util.class);
+    private static final StringManager strm = StringManager.getManager("org.apache.tomcat.vault.security.Util");
     private static final Log log = LogFactory.getLog(Util.class);
     private static final StringManager msm = StringManager.getManager("org.apache.tomcat.vault.security.resources");
 

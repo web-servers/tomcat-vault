@@ -46,7 +46,7 @@ import javax.crypto.spec.PBEParameterSpec;
  */
 public class PBEUtils
 {
-   private static final StringManager sm = StringManager.getManager(PBEUtils.class);
+   private static final StringManager sm = StringManager.getManager("org.apache.tomcat.vault.security.plugins.PBEUtils");
    private static final Log log = LogFactory.getLog(PBEUtils.class);
    private static final StringManager msm = StringManager.getManager("org.apache.tomcat.vault.security.resources");
 
