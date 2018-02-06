@@ -55,6 +55,8 @@ public class VaultTool {
     public static final String HELP_PARAM = "help";
     public static final String CRYPT = "encrypt";
 
+    private static boolean skipSummary = false;
+
     private VaultInteractiveSession session = null;
     private VaultSession nonInteractiveSession = null;
 
@@ -79,8 +81,9 @@ public class VaultTool {
             try {
                 tool = new VaultTool(args);
                 returnVal = tool.execute();
-                if (returnVal != 100)
+                if (!skipSummary) {
                     tool.summary();
+                }
             } catch (Exception e) {
                 System.err.println("Problem occured:");
                 System.err.println(e.getMessage());
@@ -182,12 +185,17 @@ public class VaultTool {
     private int execute() throws Exception {
 
         if (cmdLine.hasOption(HELP_PARAM)) {
+            // Just print the usage. Printing summary is not required here.
+            skipSummary = true;
             printUsage();
             return 100;
         }
 
         // If using the CRYPT feature without specifying a keystore, you don't need the vault
         if (cmdLine.hasOption(CRYPT) && !cmdLine.hasOption((KEYSTORE_PARAM))) {
+            // Regardless of the return here, we do not need to print summary for this command option.
+            // Also, if we forget setting skipSummary, the nonInteractiveSession will cause an NPE since there is no vault.
+            skipSummary = true;
             if (cmdLine.getArgs().length == 2) {
                 // Check to see if they tried to specify a VAULT value without a keystore :)
                 if (cmdLine.getArgs()[0].startsWith("VAULT::")) {
@@ -200,12 +208,11 @@ public class VaultTool {
                 BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
                 textEncryptor.setPassword(cmdLine.getArgs()[0]);
                 System.out.println("Encrypted value: CRYPT::" + textEncryptor.encrypt(cmdLine.getArgs()[1]));
+                return 0;
             } else {
                 System.out.println("Arguments: encryption password, value to encrypt");
+                return 100;
             }
-            // Regardless of the return here we have to return 100 or the nonInteractiveSession will cause an NPE
-            // since there is no vault.
-            return 100;
         }
 
         String keystoreURL = cmdLine.getOptionValue(KEYSTORE_PARAM, "vault.keystore");
@@ -251,15 +258,19 @@ public class VaultTool {
             }
             return 0;
         } else if (cmdLine.hasOption(CRYPT)) {
+            // Regardless of the return here, we do not need to print summary for this command option
+            skipSummary = true;
             // We need the encryption password and a value to encrypt
             if (cmdLine.getArgs().length == 2) {
                 nonInteractiveSession.encryptValueWithCRYPT(cmdLine.getArgs()[0], cmdLine.getArgs()[1]);
+                return 0;
             } else {
                 System.out.println("Arguments: encryption password, value to encrypt");
+                return 100;
             }
-            // Return 100 to prevent printing the summary
-            return 100;
         }
+        // Printing summary is not required here
+        skipSummary = true;
         return 100;
     }
 
