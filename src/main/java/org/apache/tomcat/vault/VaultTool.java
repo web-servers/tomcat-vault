@@ -140,6 +140,16 @@ public class VaultTool {
         parser = new PosixParser();
         try {
             cmdLine = parser.parse(options, args, true);
+        } catch (MissingArgumentException e) {
+            Option opt = e.getOption();
+            for (String s : args) {
+                String optionSpecified = s.replaceAll("^-+", "");
+                if (optionSpecified.equals(opt.getLongOpt()) ||
+                    optionSpecified.equals(opt.getOpt())) {
+                    System.err.println("Missing argument for option: " + optionSpecified);
+                    System.exit(2);
+                }
+            }
         } catch (ParseException e) {
             System.err.println(e.getMessage());
             System.exit(2);
