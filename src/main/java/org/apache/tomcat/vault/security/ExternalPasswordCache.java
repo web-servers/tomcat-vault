@@ -41,7 +41,7 @@ import java.util.Map;
  */
 public class ExternalPasswordCache implements PasswordCache {
 
-    private static final StringManager sm = StringManager.getManager(ExternalPasswordCache.class);
+    private static final StringManager sm = StringManager.getManager("org.apache.tomcat.vault.security.ExternalPasswordCache");
     private static final Log log = LogFactory.getLog(ExternalPasswordCache.class);
 
     private static final ExternalPasswordCache PASSWORD_CACHE = new ExternalPasswordCache();

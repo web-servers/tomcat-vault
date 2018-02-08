@@ -42,7 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SecurityVaultData implements Serializable {
 
-    private static final StringManager sm = StringManager.getManager(SecurityVaultData.class);
+    private static final StringManager sm = StringManager.getManager("org.apache.tomcat.vault.security.vault.SecurityVaultData");
     private static final Log log = LogFactory.getLog(SecurityVaultData.class);
     private static final StringManager msm = StringManager.getManager("org.apache.tomcat.vault.security.resources");
 

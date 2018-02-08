@@ -33,7 +33,7 @@ import org.apache.tomcat.util.res.StringManager;
  * @since Aug 12, 2011
  */
 public class SecurityVaultFactory {
-    private static final StringManager sm = StringManager.getManager(SecurityVaultFactory.class);
+    private static final StringManager sm = StringManager.getManager("org.apache.tomcat.vault.security.vault.SecurityVaultFactory");
     private static final Log log = LogFactory.getLog(SecurityVaultFactory.class);
     private static final StringManager msm = StringManager.getManager("org.apache.tomcat.vault.security.resources");
 
