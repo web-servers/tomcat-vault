@@ -248,7 +248,6 @@ public final class VaultSession {
      *
      * @param vaultBlock
      * @param attributeName
-     * @return true is password already exists for given vault block and attribute name.
      * @throws Exception
      */
     public void removeSecuredAttribute(String vaultBlock, String attributeName) throws Exception {

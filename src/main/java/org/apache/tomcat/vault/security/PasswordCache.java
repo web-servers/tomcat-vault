@@ -25,7 +25,7 @@ package org.apache.tomcat.vault.security;
 /**
  * Interface to cache passwords retrieved from external commands.
  *
- * @author Peter Skopek <pskopek@redhat.com>
+ * @author Peter Skopek (pskopek_at_redhat_dot_com)
  * @version $Revision:$
  */
 public interface PasswordCache {

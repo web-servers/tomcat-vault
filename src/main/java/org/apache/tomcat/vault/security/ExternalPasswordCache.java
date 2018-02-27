@@ -36,7 +36,7 @@ import java.util.Map;
  * External command password cache.
  * Singleton password cache.
  *
- * @author Peter Skopek <pskopek@redhat.com>
+ * @author Peter Skopek (pskopek_at_redhat_dot_com)
  * @version $Revision:$
  */
 public class ExternalPasswordCache implements PasswordCache {

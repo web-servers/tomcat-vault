@@ -140,7 +140,7 @@ public class PicketBoxSecurityVault implements SecurityVault {
     protected static final String defaultKeyStoreType = "JCEKS";
 
 
-    /*
+    /* (non-Javadoc)
      * @see org.jboss.security.vault.SecurityVault#init(java.util.Map)
      */
     public void init(Map<String, Object> options) throws SecurityVaultException {
@@ -208,28 +208,28 @@ public class PicketBoxSecurityVault implements SecurityVault {
 
     }
 
-    /*
+    /* (non-Javadoc)
      * @see org.jboss.security.vault.SecurityVault#isInitialized()
      */
     public boolean isInitialized() {
         return finishedInit;
     }
 
-    /*
+    /* (non-Javadoc)
      * @see org.jboss.security.vault.SecurityVault#handshake(java.util.Map)
      */
     public byte[] handshake(Map<String, Object> handshakeOptions) throws SecurityVaultException {
         return new byte[keySize];
     }
 
-    /*
+    /* (non-Javadoc)
      * @see org.jboss.security.vault.SecurityVault#keyList()
      */
     public Set<String> keyList() throws SecurityVaultException {
         return vaultContent.getVaultDataKeys();
     }
 
-    /*
+    /* (non-Javadoc)
      * @see org.jboss.security.vault.SecurityVault#store(java.lang.String, java.lang.String, char[], byte[])
      */
     public void store(String vaultBlock, String attributeName, char[] attributeValue, byte[] sharedKey)
@@ -257,7 +257,7 @@ public class PicketBoxSecurityVault implements SecurityVault {
         }
     }
 
-    /*
+    /* (non-Javadoc)
      * @see org.jboss.security.vault.SecurityVault#retrieve(java.lang.String, java.lang.String, byte[])
      */
     public char[] retrieve(String vaultBlock, String attributeName, byte[] sharedKey) throws SecurityVaultException {
@@ -282,14 +282,14 @@ public class PicketBoxSecurityVault implements SecurityVault {
         }
     }
 
-    /**
-     * @see org.jboss.security.vault.SecurityVault#exists(String, String)
+    /* (non-Javadoc)
+     * @see org.jboss.security.vault.SecurityVault#exists(java.lang.String, java.lang.String)
      */
     public boolean exists(String vaultBlock, String attributeName) throws SecurityVaultException {
         return vaultContent.getVaultData(alias, vaultBlock, attributeName) != null;
     }
 
-    /*
+    /* (non-Javadoc)
      * @see org.jboss.security.vault.SecurityVault#remove(java.lang.String, java.lang.String, byte[])
      */
     public boolean remove(String vaultBlock, String attributeName, byte[] sharedKey)
