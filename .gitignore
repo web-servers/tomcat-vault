@@ -1,5 +1,6 @@
 modules/system/layers/base/tomcat-vault/main/tomcat-vault.jar
 lib
+bin/tomcat-juli.jar
 target
 .idea
 **/*.iml
