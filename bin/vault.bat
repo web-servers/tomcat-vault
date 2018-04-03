@@ -37,7 +37,7 @@ if not exist "%VAULT_RUNJAR%" (
 
 rem Set classpath with Tomcat jars
 if "x%VAULT_CLASSPATH%" == "x" (
-  set "VAULT_CLASSPATH=%VAULT_RUNJAR%;%VAULT_HOME%\lib\tomcat-util.jar;%VAULT_HOME%\lib\tomcat-juli.jar"
+  set "VAULT_CLASSPATH=%VAULT_RUNJAR%;%VAULT_HOME%\lib\tomcat-util.jar;%VAULT_HOME%\bin\tomcat-juli.jar"
 )
 
 rem Display our environment

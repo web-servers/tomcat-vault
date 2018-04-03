@@ -81,7 +81,7 @@
                                    <echo message="tomcat-util: ${org.apache.tomcat:tomcat-util:jar}"/>
                                    <copy file="${org.apache.tomcat:tomcat-util:jar}" tofile="${project.basedir}/lib/tomcat-util.jar" />
                                    <echo message="tomcat-juli: ${org.apache.tomcat:tomcat-juli:jar}"/>
-                                   <copy file="${org.apache.tomcat:tomcat-juli:jar}" tofile="${project.basedir}/lib/tomcat-juli.jar" />
+                                   <copy file="${org.apache.tomcat:tomcat-juli:jar}" tofile="${project.basedir}/bin/tomcat-juli.jar" />
                                </target>
                             </configuration>                       
                       </execution>
