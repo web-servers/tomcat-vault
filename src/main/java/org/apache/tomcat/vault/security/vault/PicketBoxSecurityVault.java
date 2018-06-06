@@ -82,7 +82,7 @@ import java.util.StringTokenizer;
  * @since Aug 12, 2011
  */
 public class PicketBoxSecurityVault implements SecurityVault {
-    private static final StringManager sm = StringManager.getManager("org.apache.tomcat.vault.security.vault.PicketBoxSecurityVault");
+    private static final StringManager sm = StringManager.getManager(PicketBoxSecurityVault.class.getPackage().getName());
     private static final Log log = LogFactory.getLog(PicketBoxSecurityVault.class);
     private static final StringManager msm = StringManager.getManager("org.apache.tomcat.vault.security.resources");
 
