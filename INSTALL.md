@@ -9,7 +9,7 @@ Requirements:
 -------------
 
 * Tomcat Vault tarball or source repository
-* Apache Tomcat 8.0.15+
+* Apache Tomcat
 * Apache Maven
 
 Prequisites:
