@@ -316,9 +316,7 @@ public final class VaultSession {
     public void vaultConfigurationDisplay() {
         System.out.println("Vault Configuration in tomcat properties file:");
         System.out.println("********************************************");
-        System.out.println("...");
         outputConfig(System.out);
-        System.out.println("...");
         System.out.println("********************************************");
     }
 
