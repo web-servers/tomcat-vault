@@ -53,7 +53,9 @@ Building and Configuring Your Vault:
     $ bin/vault.sh --keystore /tmp/vault/vault.keystore --keystore-password my_password123 --alias my_vault --enc-dir /tmp/vault/ --iteration 44 --salt 1234abcd -g $CATALINA_BASE/conf/vault.properties
     ~~~
 
-    **Note: You can also initialize the Vault in an interactive mode by executing bin/vault.sh with no arguments. If you do this, then you will need to create a file named vault.properties in `$CATALINA_BASE/conf` containing your Vault information as below (all of these keys must be defined and NOT empty). This information is provided by the interactive session at the end of the initialization.**
+    **Note:** You can also initialize the Vault in an interactive mode by executing bin/vault.sh with no arguments. If you do this, then you will need to create a file named vault.properties in `$CATALINA_BASE/conf` containing your Vault information as below (all of these keys must be defined and **NOT** empty). This information is provided by the interactive session at the end of the initialization.
+
+    **Note:** When creating a keystore with keytool the storepass and keypass argument values must match.
 
     ~~~
     KEYSTORE_URL=..
