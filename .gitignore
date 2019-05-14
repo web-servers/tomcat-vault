@@ -4,3 +4,4 @@ bin/tomcat-juli.jar
 target
 .idea
 **/*.iml
+vault.properties
