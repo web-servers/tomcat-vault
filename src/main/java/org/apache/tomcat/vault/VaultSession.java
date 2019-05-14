@@ -174,7 +174,7 @@ public final class VaultSession {
             this.vault.init(getVaultOptionsMap());
             handshake();
         } catch (SecurityVaultException e) {
-            throw new Exception("Exception encountered:" + e.getLocalizedMessage(), e);
+            throw new Exception("Exception encountered: " + e.getLocalizedMessage(), e);
         }
     }
 

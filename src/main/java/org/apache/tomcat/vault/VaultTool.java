@@ -85,7 +85,7 @@ public class VaultTool {
                     tool.summary();
                 }
             } catch (Exception e) {
-                System.err.println("Problem occured:");
+                System.err.println("Problem occurred:");
                 System.err.println(e.getMessage());
                 System.exit(1);
             }
