@@ -1,0 +1,7 @@
+<Context>
+  <Valve className="org.tomcat.example.MyValve"
+         vaultparam="${VAULT::my_block::manager_password::}"/>
+</Context>
+
+	
+	
