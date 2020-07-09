@@ -38,6 +38,7 @@ Building and Configuring Your Vault:
 
     ~~~
     org.apache.tomcat.util.digester.PROPERTY_SOURCE=org.apache.tomcat.vault.util.PropertySourceVault
+    org.apache.tomcat.util.digester.REPLACE_SYSTEM_PROPERTIES=true
     ~~~
 
 5. Setup your Vault using `./bin/vault.sh`. Here is an example creating a keystore for the Vault and initializing it in `/tmp/vault`:
