@@ -43,7 +43,7 @@ public class MyValve
     }
 
     public void invoke(Request request, Response response) throws IOException, ServletException {
-        System.out.println("Vaultparam: " + vaultparam);
+        System.out.println("in the valve from the context.xml in webapp: Vaultparam: " + vaultparam);
     	getNext().invoke(request, response);
     }
 }

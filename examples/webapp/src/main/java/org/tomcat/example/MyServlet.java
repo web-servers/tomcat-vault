@@ -19,6 +19,8 @@ package org.tomcat.example;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Enumeration;
+import java.util.Properties;
 
 import javax.servlet.ServletException;
 
@@ -33,6 +35,16 @@ public class MyServlet extends HttpServlet {
       response.setContentType("text/html;charset=UTF-8");
       // Allocate a output writer to write the response message into the network socket
       PrintWriter out = response.getWriter();
+
+      // Read properties
+      Properties properties = new Properties();
+      properties.load(getServletContext().getResourceAsStream("/resources/examples.properties"));
+      Enumeration<?> enumeration =properties.propertyNames();
+      while (enumeration.hasMoreElements()) {
+         String key = (String) enumeration.nextElement();
+         System.out.println("properties file in webapps Key: "+key+"   Value: "+ properties.getProperty(key));
+         System.out.println("system properties in (conf/catalina.properties ) Key: "+key+"   Value: "+ System.getProperty(key));
+      }
  
       // Write the response message, in an HTML page
       try {

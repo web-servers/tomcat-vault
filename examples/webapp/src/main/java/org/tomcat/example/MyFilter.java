@@ -33,12 +33,13 @@ import javax.servlet.http.HttpServletResponse;
  * example to read a parameter processed by the vault logic
  */
 public class MyFilter implements Filter {
+
+   String vaultparam;
  
     @Override
     public void init(FilterConfig filterConfig) {
-        String vaultparam = filterConfig.getInitParameter("vault-param");
-        System.out.println("init Called!!!"); 
-        System.out.println("vault-param: " + vaultparam);
+        vaultparam = filterConfig.getInitParameter("vault.param");
+        System.out.println("init() from web.xml filter parameter vault.param: " + vaultparam);
     }
  
     @Override
@@ -48,9 +49,9 @@ public class MyFilter implements Filter {
       FilterChain chain) 
       throws IOException, ServletException {
 
-        System.out.println("doFilter Called!!!"); 
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         httpResponse.addHeader("myHeader", "myHeaderValue");
+        httpResponse.addHeader("vault.param", vaultparam);
         chain.doFilter(request, httpResponse);
     }
  
