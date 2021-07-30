@@ -10,7 +10,9 @@
     <name>Vault extension for Apache Tomcat</name>
 
     <properties>
-        <tomcat.version>9.0.19</tomcat.version>
+        <tomcat.version>9.0.50</tomcat.version>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
     </properties>
 
     <dependencies>
