@@ -32,6 +32,8 @@ import java.io.InputStreamReader;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
+import java.security.Provider;
+import java.security.Security;
 import java.util.StringTokenizer;
 
 /**
@@ -294,6 +296,23 @@ public class Util {
      */
     public static boolean isPasswordCommand(char[] passwordCmd) {
         return (passwordCmd != null) && isPasswordCommand(new String(passwordCmd));
+    }
+
+   /**
+     * Check for FIPS (vault can't be used with FIPS).
+     *
+     * @return
+     */
+    public static boolean isFIPS() {
+
+        Provider[] providers=Security.getProviders();
+        for (int i=0; i < providers.length;i++) {
+             if (providers[i].getName().toLowerCase().contains("fips")) {
+                 return true;
+             }
+        }
+
+        return false;
     }
 
 }

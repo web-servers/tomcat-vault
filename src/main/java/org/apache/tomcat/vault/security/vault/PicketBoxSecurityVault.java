@@ -144,6 +144,10 @@ public class PicketBoxSecurityVault implements SecurityVault {
      * @see org.jboss.security.vault.SecurityVault#init(java.util.Map)
      */
     public void init(Map<String, Object> options) throws SecurityVaultException {
+
+        if (Util.isFIPS()) {
+            throw new SecurityVaultException(msm.getString("cantdoFIPS"));
+        }
         if (options == null || options.isEmpty())
             throw new IllegalArgumentException(msm.getString("invalidNullOrEmptyOptionMap", "options"));
 

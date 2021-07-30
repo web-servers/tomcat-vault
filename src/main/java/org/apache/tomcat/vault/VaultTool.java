@@ -24,6 +24,7 @@ package org.apache.tomcat.vault;
 
 import org.apache.commons.cli.*;
 import org.apache.tomcat.vault.security.vault.SecurityVault;
+import org.apache.tomcat.vault.security.Util;
 
 import java.io.Console;
 import java.io.PrintStream;
@@ -73,6 +74,11 @@ public class VaultTool {
     }
 
     public static void main(String[] args) {
+
+        if (Util.isFIPS()) {
+            System.err.println("Security Vault can't be used in FIPS mode.");
+            System.exit(1);
+        }
 
         VaultTool tool = null;
 
