@@ -54,6 +54,7 @@ public class VaultTool {
     public static final String REMOVE_SEC_ATTR = "remove-sec-attr";
     public static final String GENERATE_CONFIG_FILE = "generate-config";
     public static final String HELP_PARAM = "help";
+    public static final String SKIP_SUMMARY_PARAM = "skip-summary";
     public static final String CRYPT = "encrypt";
 
     private static boolean skipSummary = false;
@@ -180,6 +181,7 @@ public class VaultTool {
         options.addOption("A", ALIAS_PARAM, true, "Vault keystore alias");
         options.addOption("b", VAULT_BLOCK_PARAM, true, "Vault block");
         options.addOption("a", ATTRIBUTE_PARAM, true, "Attribute name");
+        options.addOption("s", SKIP_SUMMARY_PARAM, false, "Skip summary");
 
         OptionGroup og = new OptionGroup();
         Option x = new Option("x", SEC_ATTR_VALUE_PARAM, true, "Secured attribute value (such as password) to store");
@@ -199,6 +201,10 @@ public class VaultTool {
     }
 
     private int execute() throws Exception {
+
+        if (cmdLine.hasOption(SKIP_SUMMARY_PARAM)){
+            skipSummary = true;
+        }
 
         if (cmdLine.hasOption(HELP_PARAM)) {
             // Just print the usage. Printing summary is not required here.
