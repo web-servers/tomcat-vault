@@ -22,7 +22,7 @@ Building and Configuring Your Vault:
 
 1. Install Apache Tomcat (from an RPM, by hand, or however you prefer)
 
-2. Compile Tomcat Vault from it's source directory:
+2. Compile Tomcat Vault from its source directory:
 
     ~~~
     $ mvn package
