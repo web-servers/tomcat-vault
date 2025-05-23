@@ -60,10 +60,6 @@ public class SecurityVaultFactory {
      * @throws SecurityVaultException
      */
     public static SecurityVault get(String fqn) throws SecurityVaultException {
-        SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            sm.checkPermission(new RuntimePermission(SecurityVaultFactory.class.getName() + ".get"));
-        }
         if (fqn == null)
             return get();
 
@@ -98,10 +94,7 @@ public class SecurityVaultFactory {
         if (fqn == null) {
             throw new IllegalArgumentException(msm.getString("invalidNullArgument", "fqn"));
         }
-        SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            sm.checkPermission(new RuntimePermission(SecurityVaultFactory.class.getName() + ".get"));
-        }
+
         if (vault == null) {
             Class<?> vaultClass = SecurityActions.loadClass(classLoader, fqn);
             if (vaultClass == null)

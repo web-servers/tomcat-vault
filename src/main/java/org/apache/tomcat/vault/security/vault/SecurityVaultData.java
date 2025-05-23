@@ -72,7 +72,7 @@ public class SecurityVaultData implements Serializable {
      * @throws IOException
      */
     private void writeObject(ObjectOutputStream oos) throws IOException {
-        oos.writeObject(new Integer(VERSION));
+        oos.writeObject(Integer.valueOf(VERSION));
         oos.writeObject(vaultData);
     }
 
