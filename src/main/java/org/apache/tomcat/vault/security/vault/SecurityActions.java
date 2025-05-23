@@ -22,46 +22,56 @@
 
 package org.apache.tomcat.vault.security.vault;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-
 /**
- * Privileged Blocks
+ * Security Actions
  *
  * @author Anil.Saldhana@redhat.com
  * @since Aug 12, 2011
  */
 class SecurityActions {
-    static Class<?> loadClass(final Class<?> clazz, final String fqn) {
-        return AccessController.doPrivileged(new PrivilegedAction<Class<?>>() {
-            public Class<?> run() {
-                ClassLoader cl = clazz.getClassLoader();
-                Class<?> loadedClass = null;
-                try {
-                    loadedClass = cl.loadClass(fqn);
-                } catch (ClassNotFoundException e) {
-                }
-                if (loadedClass == null) {
-                    try {
-                        loadedClass = Thread.currentThread().getContextClassLoader().loadClass(fqn);
-                    } catch (ClassNotFoundException e) {
-                    }
-                }
-                return loadedClass;
-            }
-        });
 
+    /**
+     * Load a class using the given class's classloader, fallback to thread context classloader
+     *
+     * @param clazz the class to use for classloader lookup
+     * @param fqn the fully qualified name of the class to load
+     * @return the loaded class, or null if not found
+     */
+    static Class<?> loadClass(final Class<?> clazz, final String fqn) {
+        ClassLoader cl = clazz.getClassLoader();
+        Class<?> loadedClass = null;
+
+        // Try with the given class's classloader first
+        try {
+            loadedClass = cl.loadClass(fqn);
+        } catch (ClassNotFoundException e) {
+            // Ignore and try context classloader
+        }
+
+        // If not found, try with thread context classloader
+        if (loadedClass == null) {
+            try {
+                loadedClass = Thread.currentThread().getContextClassLoader().loadClass(fqn);
+            } catch (ClassNotFoundException e) {
+                // Ignore - will return null
+            }
+        }
+
+        return loadedClass;
     }
 
+    /**
+     * Load a class using the given classloader
+     *
+     * @param classLoader the classloader to use
+     * @param fqn the fully qualified name of the class to load
+     * @return the loaded class, or null if not found
+     */
     static Class<?> loadClass(final ClassLoader classLoader, final String fqn) {
-        return AccessController.doPrivileged(new PrivilegedAction<Class<?>>() {
-            public Class<?> run() {
-                try {
-                    return classLoader.loadClass(fqn);
-                } catch (ClassNotFoundException e) {
-                }
-                return null;
-            }
-        });
+        try {
+            return classLoader.loadClass(fqn);
+        } catch (ClassNotFoundException e) {
+            return null;
+        }
     }
 }

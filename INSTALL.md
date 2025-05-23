@@ -28,6 +28,13 @@ Building and Configuring Your Vault:
     $ mvn package
     ~~~
 
+By default, the Tomcat major version this tool builds against is Tomcat 9 (exact version is specified in the `pom.xml` file). If you wish to build with a different exact version, please update the file accordingly and then add the appropriate `-Pprofile-name` command line argument to the command if you are targeting a different Tomcat major version. For example, if you wish to build for Tomcat 10, you would run:
+
+    ~~~
+    $ mvn package -Ptomcat-10
+    ~~~
+
+
 3. Copy the generated tomcat-vault JAR to `$CATALINA_BASE/lib/`:
 
     ~~~

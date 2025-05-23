@@ -29,9 +29,6 @@ import org.apache.tomcat.util.res.StringManager;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.security.AccessController;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
 import java.security.Provider;
 import java.security.Security;
 import java.util.StringTokenizer;
@@ -71,12 +68,7 @@ public class Util {
      * @return the password characters
      * @throws Exception
      */
-    public static char[] loadPassword(String passwordCmd)
-            throws Exception {
-        SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            sm.checkPermission(new RuntimePermission(Util.class.getName() + ".loadPassword"));
-        }
+    public static char[] loadPassword(String passwordCmd) throws Exception {
         char[] password = null;
         String passwordCmdType = null;
 
@@ -150,14 +142,7 @@ public class Util {
     }
 
     private static String execCmd(String cmd) throws Exception {
-        SecurityManager sm = System.getSecurityManager();
-        String line;
-        if (sm != null) {
-            line = RuntimeActions.PRIVILEGED.execCmd(cmd);
-        } else {
-            line = RuntimeActions.NON_PRIVILEGED.execCmd(cmd);
-        }
-        return line;
+        return RuntimeActions.execCmd(cmd);
     }
 
     /**
@@ -170,108 +155,65 @@ public class Util {
      */
     private static char[] execPBBasedPasswordCommand(String passwordCmd) throws Exception {
         log.trace(strm.getString("util.beginExecPasswordCmd", passwordCmd));
-        SecurityManager sm = System.getSecurityManager();
-        String password;
-        if (sm != null) {
-            password = RuntimeActions.PB_BASED_PRIVILEGED.execCmd(passwordCmd);
-        } else {
-            password = RuntimeActions.PB_BASED_NON_PRIVILEGED.execCmd(passwordCmd);
-        }
+        String password = RuntimeActions.execPBBasedCmd(passwordCmd);
         return password.toCharArray();
     }
 
+    /**
+     * Simplified RuntimeActions - removed privileged variants
+     */
+    static class RuntimeActions {
 
-    interface RuntimeActions {
-        RuntimeActions PRIVILEGED = new RuntimeActions() {
-            public String execCmd(final String cmd)
-                    throws Exception {
-                try {
-                    String line = AccessController.doPrivileged(
-                            new PrivilegedExceptionAction<String>() {
-                                public String run() throws Exception {
-                                    return NON_PRIVILEGED.execCmd(cmd);
-                                }
-                            }
-                    );
-                    return line;
-                } catch (PrivilegedActionException e) {
-                    throw e.getException();
-                }
-            }
-        };
-        RuntimeActions NON_PRIVILEGED = new RuntimeActions() {
-            public String execCmd(final String cmd)
-                    throws Exception {
-                Runtime rt = Runtime.getRuntime();
-                Process p = rt.exec(cmd);
-                InputStream stdin = null;
-                String line;
-                BufferedReader reader = null;
-                try {
-                    stdin = p.getInputStream();
-                    reader = new BufferedReader(new InputStreamReader(stdin));
-                    line = reader.readLine();
-                } finally {
-                    if (reader != null)
-                        reader.close();
-                    if (stdin != null)
-                        stdin.close();
-                }
-
-                int exitCode = p.waitFor();
-                log.trace(strm.getString("util.endExecPasswordCmd", exitCode));
-                return line;
-            }
-        };
-        RuntimeActions PB_BASED_PRIVILEGED = new RuntimeActions() {
-            public String execCmd(final String command)
-                    throws Exception {
-                try {
-                    String password = AccessController.doPrivileged(
-                            new PrivilegedExceptionAction<String>() {
-                                public String run() throws Exception {
-                                    return PB_BASED_NON_PRIVILEGED.execCmd(command);
-                                }
-                            }
-                    );
-                    return password;
-                } catch (PrivilegedActionException e) {
-                    throw e.getException();
-                }
-            }
-        };
-        RuntimeActions PB_BASED_NON_PRIVILEGED = new RuntimeActions() {
-            public String execCmd(final String command) throws Exception {
-                final String[] parsedCommand = parseCommand(command);
-                final ProcessBuilder builder = new ProcessBuilder(parsedCommand);
-                final Process process = builder.start();
-                final String line;
-                BufferedReader reader = null;
-                try {
-                    reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    line = reader.readLine();
-                } finally {
-                    if (reader != null)
-                        reader.close();
-                }
-
-                int exitCode = process.waitFor();
-                log.trace(strm.getString("util.endExecPasswordCmd", exitCode));
-                return line;
+        public static String execCmd(final String cmd) throws Exception {
+            Runtime rt = Runtime.getRuntime();
+            Process p = rt.exec(cmd);
+            InputStream stdin = null;
+            String line;
+            BufferedReader reader = null;
+            try {
+                stdin = p.getInputStream();
+                reader = new BufferedReader(new InputStreamReader(stdin));
+                line = reader.readLine();
+            } finally {
+                if (reader != null)
+                    reader.close();
+                if (stdin != null)
+                    stdin.close();
             }
 
-            protected String[] parseCommand(String command) {
-                // comma can be backslashed
-                final String[] parsedCommand = command.split("(?<!\\\\),");
-                for (int k = 0; k < parsedCommand.length; k++) {
-                    if (parsedCommand[k].indexOf('\\') != -1)
-                        parsedCommand[k] = parsedCommand[k].replaceAll("\\\\,", ",");
-                }
-                return parsedCommand;
-            }
-        };
+            int exitCode = p.waitFor();
+            log.trace(strm.getString("util.endExecPasswordCmd", exitCode));
+            return line;
+        }
 
-        String execCmd(String cmd) throws Exception;
+        public static String execPBBasedCmd(final String command) throws Exception {
+            final String[] parsedCommand = parseCommand(command);
+            final ProcessBuilder builder = new ProcessBuilder(parsedCommand);
+            final Process process = builder.start();
+            final String line;
+            BufferedReader reader = null;
+            try {
+                reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                line = reader.readLine();
+            } finally {
+                if (reader != null)
+                    reader.close();
+            }
+
+            int exitCode = process.waitFor();
+            log.trace(strm.getString("util.endExecPasswordCmd", exitCode));
+            return line;
+        }
+
+        private static String[] parseCommand(String command) {
+            // comma can be backslashed
+            final String[] parsedCommand = command.split("(?<!\\\\),");
+            for (int k = 0; k < parsedCommand.length; k++) {
+                if (parsedCommand[k].indexOf('\\') != -1)
+                    parsedCommand[k] = parsedCommand[k].replaceAll("\\\\,", ",");
+            }
+            return parsedCommand;
+        }
     }
 
     /**
@@ -298,21 +240,18 @@ public class Util {
         return (passwordCmd != null) && isPasswordCommand(new String(passwordCmd));
     }
 
-   /**
+    /**
      * Check for FIPS (vault can't be used with FIPS).
      *
      * @return
      */
     public static boolean isFIPS() {
-
-        Provider[] providers=Security.getProviders();
-        for (int i=0; i < providers.length;i++) {
-             if (providers[i].getName().toLowerCase().contains("fips")) {
-                 return true;
-             }
+        Provider[] providers = Security.getProviders();
+        for (int i = 0; i < providers.length; i++) {
+            if (providers[i].getName().toLowerCase().contains("fips")) {
+                return true;
+            }
         }
-
         return false;
     }
-
 }
