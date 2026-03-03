@@ -19,7 +19,6 @@ public class EncryptionUtilTest {
 
     @Test
     public void testValidEncryption() throws Exception {
-        
         String data = "Hello, World!";
         byte[] inputData = data.getBytes();
         SecretKey key = KeyGenerator.getInstance(encryptionAlgorithm).generateKey();
@@ -33,7 +32,6 @@ public class EncryptionUtilTest {
 
     @Test
     public void testIllegalArgumentData() throws Exception {
-        
         byte[] inputData = null;
         SecretKey key = KeyGenerator.getInstance(encryptionAlgorithm).generateKey();
 
@@ -43,7 +41,6 @@ public class EncryptionUtilTest {
 
     @Test
     public void testNullKey() {
-        
         String data = "Hello, World!";
         byte[] inputData = data.getBytes();
         SecretKey key = null;
@@ -53,7 +50,6 @@ public class EncryptionUtilTest {
 
     @Test
     public void testSuccessfulDecryption() throws Exception {
-        
         String originalData = "Hello, World!";
         byte[] originalBytes = originalData.getBytes();
         SecretKey key = KeyGenerator.getInstance(encryptionAlgorithm).generateKey();
@@ -70,7 +66,6 @@ public class EncryptionUtilTest {
 
     @Test
     public void testIncorrectKey() throws Exception {
-        
         String originalData = "Hello, World!";
         byte[] originalBytes = originalData.getBytes();
         SecretKey correctKey = KeyGenerator.getInstance(encryptionAlgorithm).generateKey();
@@ -87,7 +82,6 @@ public class EncryptionUtilTest {
 
     @Test
     public void testEncryptDecryptWithValidData() throws Exception {
-        
         String originalData = "Integration Test Data";
         byte[] originalBytes = originalData.getBytes();
         SecretKey key = KeyGenerator.getInstance(encryptionAlgorithm).generateKey();
@@ -103,7 +97,6 @@ public class EncryptionUtilTest {
 
     @Test
     public void testEncryptDecryptWithIncorrectKey() throws Exception {
-        
         String originalData = "Sensitive Information";
         byte[] originalBytes = originalData.getBytes();
         SecretKey correctKey = KeyGenerator.getInstance(encryptionAlgorithm).generateKey();
@@ -117,7 +110,6 @@ public class EncryptionUtilTest {
 
     @Test
     public void testEncryptDecryptWithEmptyData() throws Exception {
-        
         byte[] emptyData = new byte[0];
 
         SecretKey key = KeyGenerator.getInstance(encryptionAlgorithm).generateKey();
